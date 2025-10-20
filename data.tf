@@ -44,17 +44,17 @@ locals {
   # User-provided filepaths are expected to be relative to the root module.
   resolved_api_lambda_zip_filepath = (
     var.api_lambda.zip_filepath == null
-    ? "lambda/api/api.zip"
+    ? "${path.module}/lambda/api/api.zip"
     : "${path.root}/${var.api_lambda.zip_filepath}"
   )
   resolved_ingest_lambda_zip_filepath = (
     var.ingest_lambda.zip_filepath == null
-    ? "lambda/ingest/ingest.zip"
+    ? "${path.module}/lambda/ingest/ingest.zip"
     : "${path.root}/${var.ingest_lambda.zip_filepath}"
   )
   resolved_pre_hook_lambda_zip_filepath = (
     var.pre_hook_lambda.zip_filepath == null
-    ? "lambda/pre-hook/pre-hook.zip"
+    ? "${path.module}/lambda/pre-hook/pre-hook.zip"
     : "${path.root}/${var.pre_hook_lambda.zip_filepath}"
   )
 }
