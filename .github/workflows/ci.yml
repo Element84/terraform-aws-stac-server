@@ -1,0 +1,51 @@
+name: Continuous integration
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  update-lambdas:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      STAC_SERVER_TAG: v4.4.0
+    steps:
+      - uses: actions/checkout@v5
+      - name: Get Terraform version
+        id: tf_version
+        run: |
+          echo "value=$(cat .terraform-version)" >> $GITHUB_OUTPUT
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ steps.tf_version.outputs.value }}
+      - name: Update stac-server lambdas
+        id: update_stac_lambdas
+        run: ./scripts/update-lambdas.bash
+      - name: Terraform Init
+        id: tf_init
+        run: terraform init
+      - name: Terraform Validate
+        id: tf_validate
+        run: terraform validate -no-color
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Get Terraform version
+        id: tf_version
+        run: |
+          echo "value=$(cat .terraform-version)" >> $GITHUB_OUTPUT
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ steps.tf_version.outputs.value }}
+      - uses: terraform-linters/setup-tflint@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install pre-commit
+        run: pip install pre-commit
+      - name: Run pre-commit
+        run: pre-commit run --all-files
