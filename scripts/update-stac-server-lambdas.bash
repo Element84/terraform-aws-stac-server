@@ -29,7 +29,7 @@ curl -L -f --no-progress-meter -o stac-server.tgz "https://github.com/stac-utils
 tar -xzf stac-server.tgz
 
 echo "Building stac-server in $STAC_SERVER_DIR..."
-(cd "$STAC_SERVER_DIR"; npm install; BUILD_PRE_HOOK=true npm run build)
+(cd "$STAC_SERVER_DIR"; nvm install; nvm use; npm install; BUILD_PRE_HOOK=true npm run build)
 
 echo "Copying stac-server lambdas..."
 cp "$STAC_SERVER_DIR/dist/api/api.zip" lambda/api/
