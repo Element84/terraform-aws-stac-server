@@ -7,7 +7,6 @@
 *.tfstate
 *.tfstate.*
 *.tmp
-*.zip
 *output
 .DS_Store
 .vscode
