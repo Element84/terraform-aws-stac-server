@@ -36,6 +36,7 @@ cd "$STAC_SERVER_DIR"
 nvm install && nvm use
 npm install
 BUILD_PRE_HOOK=true npm run build
+cd ..
 
 echo "Copying stac-server lambdas..."
 cp "$STAC_SERVER_DIR/dist/api/api.zip" lambda/api/
