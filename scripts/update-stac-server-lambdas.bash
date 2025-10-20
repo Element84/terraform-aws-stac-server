@@ -32,19 +32,16 @@ echo "Building stac-server in $STAC_SERVER_DIR..."
 (cd "$STAC_SERVER_DIR"; npm install; BUILD_PRE_HOOK=true npm run build)
 
 echo "Copying stac-server lambdas..."
-mkdir -p modules/stac-server/lambda/api
-cp "$STAC_SERVER_DIR/dist/api/api.zip" modules/stac-server/lambda/api/
-mkdir -p modules/stac-server/lambda/ingest
-cp "$STAC_SERVER_DIR/dist/ingest/ingest.zip" modules/stac-server/lambda/ingest/
-mkdir -p modules/stac-server/lambda/pre-hook
-cp "$STAC_SERVER_DIR/dist/pre-hook/pre-hook.zip" modules/stac-server/lambda/pre-hook/
+cp "$STAC_SERVER_DIR/dist/api/api.zip" lambda/api/
+cp "$STAC_SERVER_DIR/dist/ingest/ingest.zip" lambda/ingest/
+cp "$STAC_SERVER_DIR/dist/pre-hook/pre-hook.zip" lambda/pre-hook/
 
-cd modules/stac-server/historical-ingest/lambda/
+cd historical-ingest/lambda
 pip install -r requirements.txt --target package
 cd package
 zip -r ../../lambda.zip .
-cd ../
+cd ..
 zip ../lambda.zip main.py
-cd ../../../../
+cd ../..
 
 echo "Done!"
