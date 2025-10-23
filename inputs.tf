@@ -7,8 +7,8 @@ variable "stac_server_version" {
   guaranteed to be compatible with this module.
   DESCRIPTION
 
-  type        = string
-  default     = "v3.10.0"
+  type    = string
+  default = "v3.10.0"
 }
 
 variable "deploy_local_stac_server_artifacts" {
