@@ -18,3 +18,6 @@ This change was validated by the following observations:
 - [ ] Changelog
   - [ ] I have added my changes to CHANGELOG.md
   - [ ] No changelog entry is necessary
+- [ ] stac-server Version
+  - [ ] I have noted a version bump in the stac-server lambdas in CHANGELOG.md
+  - [ ] No version bump was performed

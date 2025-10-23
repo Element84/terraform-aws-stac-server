@@ -13,6 +13,9 @@ on:
 permissions:
   contents: read
 
+# TODO:
+# - Failing probably because lacks access to secrets.SNYK_TOKEN
+
 jobs:
   snyk:
     permissions:

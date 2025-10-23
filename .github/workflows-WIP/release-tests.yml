@@ -1,9 +1,22 @@
-name: Deploy Manual Testing
+name: Main Branch and Release Testing
 
 on:
+  push:
+    branches: ["main"]
+    tags: ["v*.*.*"]
+  # Allows manual testing
   workflow_dispatch:
 
+# TODO:
+# - Github env vars/secrets made available to this repo 
+# - CI.tfvars
+# - Prepararing Environment statefile (can be simplified to use s3 state locking)
+# - After full testing, uncomment slack channel status...? Or we don't want slack channel posts?
+
 jobs:
+  pre-commit:
+    uses: ./.github/workflows/reusable-precommit.yml
+    
   release-tests:
     permissions:
       id-token: write
@@ -11,21 +24,27 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI: true
-      STAC_SERVER_TAG: v3.7.0
-      CIRRUS_TAG: v1.0.0a0
+      STAC_SERVER_TAG: v4.4.0
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
         with:
           node-version: "18"
+
+      # Here we read the terraform version from the .terraform-version file, and then install that version
+      - name: Get Terraform version
+        id: tf_version
+        run: |
+          echo "value=$(cat .terraform-version)" >> $GITHUB_OUTPUT
       - uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: "1.13.4"
+          terraform_version: ${{ steps.tf_version.outputs.value }}
 
       - name: Setting Pre-Requisites
         id: prereqs
         run: |
-          echo "REPOSITORY_NAME=`echo \"${{  github.sha }}\" | tr -d '.' | cut -c1-8`" >> $GITHUB_ENV
+          echo "REPOSITORY_NAME=`echo \"${{  github.ref_name }}\" | tr -d '.' | cut -c1-8`" >> $GITHUB_ENV
 
       - name: Prepararing Environment
         id: prep_env
@@ -47,11 +66,7 @@ jobs:
 
       - name: Update stac-server lambdas
         id: update_stac_lambdas
-        run: ./scripts/update-stac-server-lambdas.bash
-
-      - name: Update cirrus lambda dist
-        id: update_cirrus_lambda_dist
-        run: ./scripts/update-cirrus-lambda-dist.bash
+        run: ./scripts/update-lambdas.bash
 
       - name: Configure Terraform Init Credentials
         id: init_creds
@@ -94,27 +109,27 @@ jobs:
         continue-on-error: true
         run: terraform apply -lock=false -input=false test.tfplan
 
-      - name: Post status to Slack channel
-        id: tf_apply_successs
-        if: steps.tf_apply.outcome == 'success'
-        continue-on-error: true
-        uses: slackapi/slack-github-action@v1.26.0
-        with:
-          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
-          slack-message: ":badger_dance: ${{  github.ref_name }} terraform apply job has succeeded!\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      # - name: Post status to Slack channel
+      #   id: tf_apply_successs
+      #   if: steps.tf_apply.outcome == 'success'
+      #   continue-on-error: true
+      #   uses: slackapi/slack-github-action@v1.26.0
+      #   with:
+      #     channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+      #     slack-message: ":badger_dance: terraform-aws-stac-server - ${{  github.ref_name }} terraform apply job has succeeded!\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+      #   env:
+      #     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
-      - name: Post status to Slack channel
-        id: tf_apply_failure
-        if: steps.tf_apply.outcome != 'success'
-        continue-on-error: true
-        uses: slackapi/slack-github-action@v1.26.0
-        with:
-          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
-          slack-message: ":sadpanda: ${{  github.ref_name }} terraform apply has failed!\n:alert: make sure cleanup job deletes all AWS resources!\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      # - name: Post status to Slack channel
+      #   id: tf_apply_failure
+      #   if: steps.tf_apply.outcome != 'success'
+      #   continue-on-error: true
+      #   uses: slackapi/slack-github-action@v1.26.0
+      #   with:
+      #     channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+      #     slack-message: ":sadpanda: terraform-aws-stac-server -${{  github.ref_name }} terraform apply has failed!\n:alert: make sure cleanup job deletes all AWS resources!\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+      #   env:
+      #     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
       - name: Configure Terraform Cleanup Check Credentials
         id: cleanup_check_creds
@@ -145,42 +160,24 @@ jobs:
         continue-on-error: true
         run: terraform apply -destroy -lock=false -input=false test-cleanup.tfplan
 
-      - name: Post status to Slack channel
-        id: tf_destroy_apply_successs
-        if: steps.tf_destroy_apply.outcome == 'success'
-        continue-on-error: true
-        uses: slackapi/slack-github-action@v1.26.0
-        with:
-          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
-          slack-message: ":badger_dance: ${{  github.ref_name }} cleanup job has succeeded!\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      # - name: Post status to Slack channel
+      #   id: tf_destroy_apply_successs
+      #   if: steps.tf_destroy_apply.outcome == 'success'
+      #   continue-on-error: true
+      #   uses: slackapi/slack-github-action@v1.26.0
+      #   with:
+      #     channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+      #     slack-message: ":badger_dance: terraform-aws-stac-server - ${{  github.ref_name }} cleanup job has succeeded!\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+      #   env:
+      #     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
-      - name: Post status to Slack channel
-        id: tf_destroy_apply_failure
-        if: steps.tf_destroy_apply.outcome != 'success'
-        continue-on-error: true
-        uses: slackapi/slack-github-action@v1.26.0
-        with:
-          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
-          slack-message: ":sadpanda: ${{  github.ref_name }} cleanup job has failed!\n:alert: make sure AWS resources are deleted!\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-
-  pre-commit:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: "1.13.4"
-      - uses: terraform-linters/setup-tflint@v4
-        with:
-          tflint_version: "v0.49.0"
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - name: Install pre-commit
-        run: pip install pre-commit
-      - name: Run pre-commit
-        run: pre-commit run --all-files
+      # - name: Post status to Slack channel
+      #   id: tf_destroy_apply_failure
+      #   if: steps.tf_destroy_apply.outcome != 'success'
+      #   continue-on-error: true
+      #   uses: slackapi/slack-github-action@v1.26.0
+      #   with:
+      #     channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+      #     slack-message: ":sadpanda: terraform-aws-stac-server -${{  github.ref_name }} cleanup job has failed!\n:alert: make sure AWS resources are deleted!\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+      #   env:
+      #     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
