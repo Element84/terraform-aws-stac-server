@@ -1,5 +1,5 @@
 variable "stac_server_version" {
-  description = "STAC Server version"
+  description = "STAC Server version. Note that deploy_local_stac_server_artifacts must be true to use this variable."
   type        = string
   default     = "v3.10.0"
 }
