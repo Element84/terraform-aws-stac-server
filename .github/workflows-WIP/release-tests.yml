@@ -24,6 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI: true
+      # Ensure this matches inputs.stac_server_version
       STAC_SERVER_TAG: v3.10.0
     steps:
       - uses: actions/checkout@v5
