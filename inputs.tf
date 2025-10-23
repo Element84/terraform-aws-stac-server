@@ -1,5 +1,12 @@
 variable "stac_server_version" {
-  description = "STAC Server version. Note that deploy_local_stac_server_artifacts must be true to use this variable."
+  description = <<-DESCRIPTION
+  stac-server version. Leave this null to use the default, prepackaged version of stac-server.
+
+  If you need to use a custom version, set this variable to the desired version string *and* set
+  deploy_local_stac_server_artifacts = true. Note though that custom versions of stac-server are not
+  guaranteed to be compatible with this module.
+  DESCRIPTION
+
   type        = string
   default     = "v3.10.0"
 }
@@ -7,7 +14,8 @@ variable "stac_server_version" {
 variable "deploy_local_stac_server_artifacts" {
   description = "Deploy STAC Server artifacts for local deploy"
   type        = bool
-  default     = true
+  default     = false
+  nullable    = false
 }
 
 variable "stac_id" {
