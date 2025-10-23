@@ -7,8 +7,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
-- Initial version of this standalone stac-server infrastructure module. Still in Beta, not ready for prod use!
-
 ### Added
 
 ### Changed
@@ -17,3 +15,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Removed
 
+## [0.0.1] - 2025-10-23
+
+### Added
+
+- v3.10.0 of stac-server
+
+- Initial version of this standalone stac-server infrastructure module
