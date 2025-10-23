@@ -18,10 +18,6 @@
 .terraform/
 __pycache__
 bin/terraform
-modules/jupyterhub-dask-eks/cluster.yaml
-modules/jupyterhub-dask-eks/daskhub.yaml
-modules/jupyterhub-dask-eks/spec.yaml
-modules/jupyterhub-dask-eks/storageclass.yaml
 node_modules
 package-lock.json
 plan.json
@@ -31,5 +27,4 @@ stac-server-*
 stac-server.tgz
 terraform-visual-report
 terraform.tgz
-modules/stac-server/historical-ingest/lambda/package/*
-!modules/cirrus/cirrus-lambda-dist.zip
+historical-ingest/lambda/package/*

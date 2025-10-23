@@ -1,0 +1,40 @@
+name: Continuous integration
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  pre-commit:
+    uses: ./.github/workflows/reusable-precommit.yml
+
+  update-lambdas:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      STAC_SERVER_TAG: v3.10.0
+    steps:
+      - uses: actions/checkout@v5
+
+      # Here we read the terraform version from the .terraform-version file, and then install that version
+      - name: Get Terraform version
+        id: tf_version
+        run: |
+          echo "value=$(cat .terraform-version)" >> $GITHUB_OUTPUT
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ steps.tf_version.outputs.value }}
+
+      - name: Update stac-server lambdas
+        id: update_stac_lambdas
+        run: ./scripts/update-lambdas.bash
+
+      - name: Terraform Init
+        id: tf_init
+        run: terraform init
+
+      - name: Terraform Validate
+        id: tf_validate
+        run: terraform validate -no-color
