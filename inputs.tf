@@ -1,3 +1,14 @@
+variable "project_name" {
+  description = "Project Name"
+  type        = string
+}
+
+variable "stac_api_stage" {
+  description = "STAC API stage"
+  type        = string
+  default     = "dev"
+}
+
 variable "stac_server_version" {
   description = <<-DESCRIPTION
   stac-server version. Leave this null to use the default, prepackaged version of stac-server.
@@ -98,12 +109,6 @@ variable "enable_ingest_action_truncate" {
   description = "Enable Ingest Action Truncate"
   type        = string
   default     = false
-}
-
-variable "stac_api_stage" {
-  description = "STAC API stage"
-  type        = string
-  default     = "dev"
 }
 
 variable "stac_api_stage_description" {
@@ -436,11 +441,6 @@ variable "additional_ingest_sqs_senders_arns" {
   type        = list(string)
   default     = []
   nullable    = false
-}
-
-variable "project_name" {
-  description = "Project Name"
-  type        = string
 }
 
 variable "authorized_s3_arns" {

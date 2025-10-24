@@ -24,14 +24,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI: true
-      # Ensure this matches inputs.stac_server_version default value
+      # Ensure this matches inputs.tf stac_server_version default value
       STAC_SERVER_TAG: v3.10.0
     steps:
       - uses: actions/checkout@v5
-
-      - uses: actions/setup-node@v5
-        with:
-          node-version: "18"
 
       # Here we read the terraform version from the .terraform-version file, and then install that version
       - name: Get Terraform version
@@ -50,17 +46,15 @@ jobs:
       - name: Prepararing Environment
         id: prep_env
         run: |
-          echo "environment = \"git\"" >> ci.tfvars
-          echo "project_name = \"${REPOSITORY_NAME}\"" >> ci.tfvars
           cat ci.tfvars
           echo "Creating terraform backend file ..."
           echo 'terraform {' >> test.s3.backend.tf
           echo '  backend "s3" {' >> test.s3.backend.tf
           echo '    encrypt = true' >> test.s3.backend.tf
-          echo "    bucket = \"${{ secrets.TF_STATE_BUCKET }}\"" >> test.s3.backend.tf
-          echo "    dynamodb_table = \"${{ secrets.TF_STATE_LOCK_TABLE }}\"" >> test.s3.backend.tf
+          echo "    bucket = \"${{ secrets.TF_STATE_BUCKET }}\"" >> test.s3.backend.tf          
           echo "    key = \"${REPOSITORY_NAME}-github-test.tfstate\"" >> test.s3.backend.tf
           echo "    region = \"${{ secrets.AWS_REGION }}\"" >> test.s3.backend.tf
+          echo "    use_lockfile = true >> test.s3.backend.tf
           echo '  }' >> test.s3.backend.tf
           echo '}' >> test.s3.backend.tf
           cat test.s3.backend.tf
@@ -71,7 +65,7 @@ jobs:
 
       - name: Configure Terraform Init Credentials
         id: init_creds
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
@@ -87,7 +81,7 @@ jobs:
 
       - name: Configure Terraform Plan Credentials
         id: plan_creds
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
@@ -95,11 +89,11 @@ jobs:
 
       - name: Terraform Plan
         id: tf_plan
-        run: terraform plan -var-file="ci.tfvars" -out test.tfplan -lock=false
+        run: terraform plan -var-file="ci.tfvars" -out test.tfplan
 
       - name: Configure Terraform Apply Credentials
         id: apply_creds
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
@@ -108,7 +102,7 @@ jobs:
       - name: Terraform Apply
         id: tf_apply
         continue-on-error: true
-        run: terraform apply -lock=false -input=false test.tfplan
+        run: terraform apply -input=false test.tfplan
 
       # - name: Post status to Slack channel
       #   id: tf_apply_successs
@@ -135,7 +129,7 @@ jobs:
       - name: Configure Terraform Cleanup Check Credentials
         id: cleanup_check_creds
         if: always()
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
@@ -144,12 +138,12 @@ jobs:
       - name: Terraform Destroy Pre-Check
         id: tf_destroy_plan
         if: always()
-        run: terraform plan -destroy -var-file="ci.tfvars" -out test-cleanup.tfplan -lock=false
+        run: terraform plan -destroy -var-file="ci.tfvars" -out test-cleanup.tfplan
 
       - name: Configure Terraform Cleanup Credentials
         id: cleanup_creds
         if: always()
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
@@ -159,7 +153,7 @@ jobs:
         id: tf_destroy_apply
         if: always()
         continue-on-error: true
-        run: terraform apply -destroy -lock=false -input=false test-cleanup.tfplan
+        run: terraform apply -destroy -input=false test-cleanup.tfplan
 
       # - name: Post status to Slack channel
       #   id: tf_destroy_apply_successs
