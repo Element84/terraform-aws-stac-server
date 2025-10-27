@@ -1,9 +1,6 @@
 name: Main Branch and Release Testing
 
 on:
-  # TODO: remove this pull_request trigger after testing is complete
-  pull_request:
-    branches: ["main"]
   push:
     branches: ["main"]
     tags: ["v*.*.*"]
@@ -13,8 +10,7 @@ on:
 # TODO:
 # - Github env vars/secrets made available to this repo 
 # - CI.tfvars
-# - Prepararing Environment statefile (can be simplified to use s3 state locking)
-# - After full testing, uncomment slack channel status...? Or we don't want slack channel posts?
+# - After full testing, uncomment slack channel status
 
 jobs:
   pre-commit:
@@ -52,7 +48,7 @@ jobs:
           sed -i 's/"TF_STATE_BUCKET"/"${{ secrets.TF_STATE_BUCKET }}"/g' scripts/cicd.backend.tf
           sed -i 's/"AWS_REGION"/"${{ secrets.AWS_REGION}}"/g' scripts/cicd.backend.tf
           envsubst < scripts/cicd.backend.tf > cicd.backend.tf
-          echo -e "\n cicd.backend.tf:\n"
+          echo -e "\n cicd.backend.tf contents:\n"
           cat cicd.backend.tf
 
       # - name: Update stac-server lambdas
