@@ -49,8 +49,10 @@ jobs:
       - name: Preparing Environment
         id: prep_env
         run: |
-          cat ci.tfvars
+          sed -i 's/"TF_STATE_BUCKET"/"${{ secrets.TF_STATE_BUCKET }}"/g' scripts/cicd.backend.tf
+          sed -i 's/"AWS_REGION"/"${{ secrets.AWS_REGION}}"/g' scripts/cicd.backend.tf
           envsubst < scripts/cicd.backend.tf > cicd.backend.tf
+          echo -e "\n cicd.backend.tf:\n"
           cat cicd.backend.tf
 
       # - name: Update stac-server lambdas

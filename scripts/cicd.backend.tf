@@ -1,10 +1,10 @@
 # tflint-ignore: terraform_required_version
 terraform {
   backend "s3" {
-    # these are injected from environment variables by CICD
-    bucket       = secrets.TF_STATE_BUCKET
-    region       = secrets.AWS_REGION
-    key          = "${REPOSITORY_NAME}-github-test.tfstate"
+    # these are injected from env vars by CICD
+    bucket       = "TF_STATE_BUCKET"
+    region       = "AWS_REGION"
+    key          = "${GITHUB_REPOSITORY}-tfstacserv-github-test.tfstate"
     use_lockfile = true
   }
 }

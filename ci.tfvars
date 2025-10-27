@@ -1,16 +1,16 @@
-project_name                                = "terraform-aws-stac-server-cicd"
-stac_api_stage                              = "git"
-stac_server_version                         = null
-deploy_local_stac_server_artifacts          = false
-stac_id                                     = "stac-server"
-stac_title                                  = "STAC API"
-stac_description                            = "A STAC API using stac-server"
+project_name                       = "terraform-aws-stac-server-cicd"
+stac_api_stage                     = "git"
+stac_server_version                = null
+deploy_local_stac_server_artifacts = false
+stac_id                            = "stac-server"
+stac_title                         = "STAC API"
+stac_description                   = "A STAC API using stac-server"
 
 # TODO: query via data, or hardcode?
-vpc_id                                      = var.vpc_id
-vpc_cidr_range                              = var.vpc_cidr
-vpc_subnet_ids                              = var.private_subnet_ids
-vpc_security_group_ids                      = [var.security_group_id]
+vpc_id                 = var.vpc_id
+vpc_cidr_range         = var.vpc_cidr
+vpc_subnet_ids         = var.private_subnet_ids
+vpc_security_group_ids = [var.security_group_id]
 
 enable_transactions_extension               = var.stac_server_inputs.enable_transactions_extension
 enable_collections_authx                    = var.stac_server_inputs.enable_collections_authx
