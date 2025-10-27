@@ -51,7 +51,7 @@ jobs:
         run:   echo "$GITHUB_CONTEXT"
         shell: bash
         env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
+          GITHUB_CONTEXT: ${{ toJson(github) }}
 
       # - name: Preparing Environment
       #   id: prep_env
