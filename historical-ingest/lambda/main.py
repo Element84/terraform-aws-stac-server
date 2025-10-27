@@ -101,16 +101,16 @@ def wait_for_new_collections(collections, stac_dest_url):
         all_created = True
 
         for c in collections:
-            logger.info(f'Checking status of {stac_dest_url}/collections/{c["id"]}')
-            response = requests.get(f'{stac_dest_url}/collections/{c["id"]}')
+            logger.info(f"Checking status of {stac_dest_url}/collections/{c['id']}")
+            response = requests.get(f"{stac_dest_url}/collections/{c['id']}")
 
             # Debug / Test
             logger.info(
-                f'Collection status code: {str(c["id"])}, {str(response.status_code)}'
+                f"Collection status code: {str(c['id'])}, {str(response.status_code)}"
             )
 
             if response.status_code != 200:
-                logger.info(f'Still waiting for Collection: {str(c["id"])}')
+                logger.info(f"Still waiting for Collection: {str(c['id'])}")
                 all_created = False
 
         if all_created:
