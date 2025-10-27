@@ -2,9 +2,9 @@
 terraform {
   backend "s3" {
     # these are injected from env vars by CICD
-    bucket       = "TF_STATE_BUCKET"
-    region       = "AWS_REGION"
-    key          = "${GITHUB_REPOSITORY}-github-test.tfstate"
+    bucket       = "VAR-TF_STATE_BUCKET"
+    region       = "VAR-AWS_REGION"
+    key          = "VAR-GITHUB_REPOSITORY-cicd.tfstate"
     use_lockfile = true
   }
 }

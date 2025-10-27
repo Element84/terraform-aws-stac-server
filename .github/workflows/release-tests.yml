@@ -1,6 +1,9 @@
 name: Main Branch and Release Testing
 
 on:
+  # TODO: remove this when done testin
+  pull_request:
+    branches: ["main"]
   push:
     branches: ["main"]
     tags: ["v*.*.*"]
@@ -14,6 +17,8 @@ on:
 
 jobs:
   pre-commit:
+    permissions:
+      contents: read
     uses: ./.github/workflows/reusable-precommit.yml
     
   release-tests:
@@ -45,9 +50,9 @@ jobs:
       - name: Preparing Environment
         id: prep_env
         run: |
-          sed -i 's/"TF_STATE_BUCKET"/"${{ secrets.TF_STATE_BUCKET }}"/g' scripts/cicd.backend.tf
-          sed -i 's/"AWS_REGION"/"${{ secrets.AWS_REGION}}"/g' scripts/cicd.backend.tf
-          envsubst < scripts/cicd.backend.tf > cicd.backend.tf
+          sed -i 's/"VAR-TF_STATE_BUCKET"/"${{ secrets.TF_STATE_BUCKET }}"/g' scripts/cicd.backend.tf
+          sed -i 's/"VAR-AWS_REGION"/"${{ secrets.AWS_REGION}}"/g' scripts/cicd.backend.tf
+          sed -i 's/"VAR-GITHUB_REPOSITORY"/"${{ github.repository }}"/g' scripts/cicd.backend.tf
           echo -e "\n cicd.backend.tf contents:\n"
           cat cicd.backend.tf
 
