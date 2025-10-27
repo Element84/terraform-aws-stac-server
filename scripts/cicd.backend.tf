@@ -4,7 +4,7 @@ terraform {
     # these are injected from env vars by CICD
     bucket       = "VAR-TF_STATE_BUCKET"
     region       = "VAR-AWS_REGION"
-    key          = "VAR-GITHUB_REPOSITORY-cicd.tfstate"
+    key          = "VAR-GITHUB_REPOSITORY-tfstacserv-cicd.tfstate"
     use_lockfile = true
   }
 }
