@@ -9,6 +9,6 @@ resource "null_resource" "stac_server_local_artifact_setup" {
   provisioner "local-exec" {
     interpreter = ["bash", "-ec"]
     working_dir = path.module
-    command     = "./scripts/update-lambdas.bash ${var.stac_server_version}"
+    command     = "./utils/update-lambdas.bash ${var.stac_server_version}"
   }
 }
