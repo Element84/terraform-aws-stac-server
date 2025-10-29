@@ -4,12 +4,12 @@
 #
 # Usage:
 #
-#     ./scripts/update-stac-server-lambdas.bash vX.Y.Z
+#     ./utils/update-lambdas.bash vX.Y.Z
 #
 # or
 #
 #     export STAC_SERVER_TAG=vX.Y.Z
-#     ./scripts/update-stac-server-lambdas.bash
+#     ./utils/update-lambdas.bash
 
 set -euo pipefail
 

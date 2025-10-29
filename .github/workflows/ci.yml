@@ -30,7 +30,7 @@ jobs:
 
       - name: Update stac-server lambdas
         id: update_stac_lambdas
-        run: ./scripts/update-lambdas.bash
+        run: ./utils/update-lambdas.bash
 
       - name: Terraform Init
         id: tf_init
