@@ -9,7 +9,6 @@ on:
 
 # TODO:
 # - Github env vars/secrets made available to this repo 
-# - CI.tfvars
 # - After full testing, uncomment slack channel status
 
 jobs:
@@ -18,6 +17,7 @@ jobs:
       contents: read
     uses: ./.github/workflows/reusable-precommit.yml
     
+  # Build, validate, apply, then destroy the terraform module. Notify slack of success/failure
   release-tests:
     permissions:
       id-token: write
@@ -39,7 +39,6 @@ jobs:
         with:
           terraform_version: ${{ steps.tf_version.outputs.value }}
 
-      # TODO: fix this with the new cicd module
       - name: Preparing Environment
         id: prep_env
         working-directory: utils/cicd
@@ -50,9 +49,9 @@ jobs:
           echo -e "\n cicd backend.tf contents:\n"
           cat backend.tf
 
-      # - name: Update stac-server lambdas
-      #   id: update_stac_lambdas
-      #   run: ./utils/update-lambdas.bash
+      - name: Update stac-server lambdas
+        id: update_stac_lambdas
+        run: ./utils/update-lambdas.bash
 
       # - name: Configure Terraform Init Credentials
       #   id: init_creds
@@ -62,15 +61,15 @@ jobs:
       #     role-to-assume: ${{ secrets.AWS_ROLE }}
       #     role-session-name: GitHubReleaseInit
 
-      # - name: Terraform Init
-      #   id: tf_init
-      #   working-directory: utils/cicd
-      #   run: terraform init
+      - name: Terraform Init
+        id: tf_init
+        working-directory: utils/cicd
+        run: terraform init
 
-      # - name: Terraform Validate
-      #   id: tf_validate
-      #   working-directory: utils/cicd
-      #   run: terraform validate
+      - name: Terraform Validate
+        id: tf_validate
+        working-directory: utils/cicd
+        run: terraform validate
 
       # - name: Configure Terraform Plan Credentials
       #   id: plan_creds
@@ -80,10 +79,10 @@ jobs:
       #     role-to-assume: ${{ secrets.AWS_ROLE }}
       #     role-session-name: GitHubReleasePlan
 
-      # - name: Terraform Plan
-      #   id: tf_plan
-      #   working-directory: utils/cicd
-      #   run: terraform plan -out test.tfplan
+      - name: Terraform Plan
+        id: tf_plan
+        working-directory: utils/cicd
+        run: terraform plan -out test.tfplan
 
       # - name: Configure Terraform Apply Credentials
       #   id: apply_creds
