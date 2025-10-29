@@ -5,6 +5,7 @@
 - tfenv
 - pre-commit
 - nvm (if updating the default, built-in stac-server version)
+- An AWS account with an existing VPC with private subnets
 
 **General Updates**
 

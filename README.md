@@ -19,4 +19,10 @@ An opinionated way of deploying [stac-server](https://github.com/stac-utils/stac
 
 ## Usage
 
-See [filmdrop-aws-tf-modules](https://github.com/Element84/filmdrop-aws-tf-modules) for a complete example usage.
+While this module is most commonly used in conjunction with a FilmDrop deployment, it can be deployed as a standalone STAC server. As a prerequisite, a VPC in an AWS account which contains at least one private subnet will be needed.
+
+Example usages:
+
+- [filmdrop-aws-tf-modules](https://github.com/Element84/filmdrop-aws-tf-modules) is a complete working example usage in the core FilmDrop module
+
+- `/utils/cicd` in this repository provides an example used in our CI/CD tests

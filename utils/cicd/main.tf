@@ -1,8 +1,14 @@
-# Vars for our CI/CD deployment of stac-server. Note that we assume access to an AWS account which contains
+# CI/CD test deployment of stac-server. Note that we assume access to an AWS account which contains
 # a VPC specifically tagged with { Name = "aws-controltower-VPC" } that contains the typical FilmDrop VPC
 # setup with public/private subnets, networking, etc. See the main FilmDrop AWS Terraform modules 
 # repository for more details.
-module "setup" {
+
+# Query VPC details from the AWS account used for CI/CD
+module "vpc-data" {
+  source = "./vpc-data"
+}
+
+module "main" {
   source = "../.."
 
   # project
@@ -20,8 +26,8 @@ module "setup" {
   # vpc
   vpc_id                 = module.vpc-data.vpc_id
   vpc_cidr_range         = module.vpc-data.vpc_cidr
-  vpc_subnet_ids         = module.vpc-data.private_subnets
-  vpc_security_group_ids = module.vpc-data.security_group.id
+  vpc_subnet_ids         = module.vpc-data.private_subnet_ids
+  vpc_security_group_ids = [module.vpc-data.security_group_id]
 
   # and more!
   enable_transactions_extension               = false
