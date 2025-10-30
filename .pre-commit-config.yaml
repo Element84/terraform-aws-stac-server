@@ -4,13 +4,13 @@ repos:
     hooks:
       - id: terraform_fmt
       - id: terraform_tflint
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.2
-    hooks:
-      - id: ruff
-      - id: ruff-format
   - repo: https://github.com/terraform-docs/terraform-docs
     rev: v0.20.0
     hooks:
       - id: terraform-docs-go
         args: ["."]
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.2
+    hooks:
+      - id: ruff
+      - id: ruff-format
