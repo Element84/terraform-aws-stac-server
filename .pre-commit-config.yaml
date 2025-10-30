@@ -8,7 +8,7 @@ repos:
   # handle things like recursive.enabled: true well. recommended using this official terraform-docs
   # hook instead
   - repo: https://github.com/terraform-docs/terraform-docs
-    rev: v0.20.0
+    rev: v0.19.0
     hooks:
       - id: terraform-docs-go
         args: ["."]

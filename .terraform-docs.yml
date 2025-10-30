@@ -10,6 +10,11 @@ sections:
     - resources
     - data-sources
 
+settings:
+  # extract provider versions from .tf rather than from your specific lockfile. without this, building
+  # docs will vary between developers (and cicd), due to differing lockfiles
+  lockfile: false
+
 output:
   file: "README.md"
   # enrich README with module documentation, rather than overwriting the entire file
