@@ -19,8 +19,8 @@
 
 **Updating the Default, Built-In stac-server Version**
 
-We prepackage a specific stac-server version with each release of this repository. To change this prepackaged version:
+We package a specific stac-server version with each release of this repository. To change this packaged version:
 
 1. Build stac-server and get its lambdas: `./utils/update-lambdas.bash v3.10.0`
 
-2. *Important* -- follow the steps in the PR template to note and propagate the change to appropriate files
+2. *Important* -- follow the steps in `.github/pull_request_template.md` to note and propagate the change to appropriate files
