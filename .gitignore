@@ -27,6 +27,6 @@ stac-server-*
 stac-server.tgz
 terraform-visual-report
 terraform.tgz
-historical-ingest/lambda/package/*
+modules/historical-ingest/lambda/package/*
 user_init_lambda_zip.zip 
 waiting_for_opensearch_lambda_zip.zip

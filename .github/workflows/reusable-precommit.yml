@@ -9,19 +9,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      # Here we read the terraform version from the .terraform-version file, and then install that version
-      - name: Get Terraform version
+      # Here we read the terraform version from the .terraform-version file
+      - name: Get terraform version
         id: tf_version
         run: |
           echo "value=$(cat .terraform-version)" >> $GITHUB_OUTPUT
-      - uses: hashicorp/setup-terraform@v3
+
+      # ...and install that specific version
+      - name: Install terraform
+        uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ steps.tf_version.outputs.value }}
-      - uses: terraform-linters/setup-tflint@v6
-      - uses: actions/setup-python@v5
+
+      - name: Install tflint
+        uses: terraform-linters/setup-tflint@v6
         with:
-          python-version: "3.11"
-      - name: Install pre-commit
-        run: pip install pre-commit
+          tflint_version: latest
+
       - name: Run pre-commit
-        run: pre-commit run --all-files
+        uses: pre-commit/action@v3.0.1

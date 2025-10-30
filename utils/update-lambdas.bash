@@ -43,7 +43,7 @@ cp "$STAC_SERVER_DIR/dist/api/api.zip" lambda/api/
 cp "$STAC_SERVER_DIR/dist/ingest/ingest.zip" lambda/ingest/
 cp "$STAC_SERVER_DIR/dist/pre-hook/pre-hook.zip" lambda/pre-hook/
 
-cd historical-ingest/lambda
+cd modules/historical-ingest/lambda
 pip install -r requirements.txt --target package
 cd package
 zip -r ../../lambda.zip .
