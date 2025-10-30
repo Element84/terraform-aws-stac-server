@@ -10,16 +10,25 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       # Here we read the terraform version from the .terraform-version file
-      - name: Get Terraform version
+      - name: Get terraform version
         id: tf_version
         run: |
           echo "value=$(cat .terraform-version)" >> $GITHUB_OUTPUT
+
       # ...and install that specific version
-      - uses: hashicorp/setup-terraform@v3
+      - name: Install terraform
+        uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ steps.tf_version.outputs.value }}
+
+      - name: Install tflint
+        uses: terraform-linters/setup-tflint@v6
+        with:
+          tflint_version: latest
+
       - name: Run pre-commit
         uses: pre-commit/action@v3.0.1
+        
       - name: Check versions
         run: |
           terraform --version
