@@ -4,6 +4,9 @@ repos:
     hooks:
       - id: terraform_fmt
       - id: terraform_tflint
+  # note that pre-commit-terraform does have a built-in terraform_docs hook, but it does not
+  # handle things like recursive.enabled: true well. recommended using this official terraform-docs
+  # hook instead
   - repo: https://github.com/terraform-docs/terraform-docs
     rev: v0.20.0
     hooks:
