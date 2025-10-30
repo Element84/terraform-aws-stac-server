@@ -9,3 +9,8 @@ repos:
     hooks:
       - id: ruff
       - id: ruff-format
+  - repo: https://github.com/terraform-docs/terraform-docs
+    rev: v0.20.0
+    hooks:
+      - id: terraform-docs-go
+        args: ["."]
