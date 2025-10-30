@@ -37,6 +37,9 @@ pre-commit run --all-files
 # update docs
 pre-commit run terraform-docs-go --all-files
 
+# terraform format everything
+pre-commit run terraform_fmt --all-files
+
 # terraform-lint everything
 pre-commit run terraform_tflint --all-files
 ```
@@ -46,7 +49,9 @@ pre-commit run terraform_tflint --all-files
 - nvm
   - Needed if updating the default, built-in stac-server version
 - terraform-docs
-  - Installing pre-commit enables you to `pre-commit run terraform-docs-go --all-files` to update documentation. For a little more control, explicitly install terraform-doc and use `terraform-docs .` at the root of this repo
+  - Installing pre-commit enables you to `pre-commit run terraform-docs-go --all-files` to update documentation. For a little more control, directly install terraform-docs and use `terraform-docs .` at the root of this repo. For parity with our CICD tests, install the version of terraform-docs denoted in .pre-commit-config.yaml
+- tflint
+  - pre-commit enables `pre-commit run terraform_tflint --all-files`. For more control, direclty install tflint and use `tflint --recursive` at the root of this repo. For parity with out CICD tests, install the version of tflint denoted in .github/workflows/reusable-precommit.yml
 
 **Updating the Default, Built-In stac-server Version**
 

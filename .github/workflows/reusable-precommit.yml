@@ -28,10 +28,9 @@ jobs:
 
       - name: Run pre-commit
         uses: pre-commit/action@v3.0.1
-        
+
       - name: Check versions
         run: |
           terraform --version
           pre-commit --version
-          terraform-docs --version
           tflint --version
