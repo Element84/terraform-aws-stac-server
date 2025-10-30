@@ -18,10 +18,5 @@ jobs:
         with:
           terraform_version: ${{ steps.tf_version.outputs.value }}
       - uses: terraform-linters/setup-tflint@v6
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - name: Install pre-commit
-        run: pip install pre-commit
       - name: Run pre-commit
-        run: pre-commit run --all-files
+        uses: pre-commit/action@v3.0.1
