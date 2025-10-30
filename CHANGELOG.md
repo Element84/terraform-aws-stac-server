@@ -7,8 +7,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
-- Support inputs.stac_server_version usage
-
 ### Added
 
 ### Changed
@@ -16,6 +14,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 ### Removed
+
+## [1.0.0] - 2025-10-30
+
+### Added
+
+- Support inputs.stac_server_version usage
+
+- CICD setup
 
 ## [0.0.1] - 2025-10-23
 
