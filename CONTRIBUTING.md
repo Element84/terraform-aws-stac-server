@@ -19,14 +19,14 @@ We would love for you to contribute! Please follow the steps below to get starte
 
 **Getting Started**
 
-At this point, you're ready to make some changes! When attempting to commit, pre-commit will ensure your changes pass our linting rules (and that READMEs are automatically updated via terraform-docs). You 
+At this point, you're ready to make some changes! When attempting to commit, pre-commit will ensure your changes pass our linting rules (and that READMEs are automatically updated via terraform-docs). For more detailed control of linting, doc generation etc. see the Optional Setup section below.
 
 **Making a Change**
 
 - Clone this repository, create a branch
 - Make a great contribution!
-  - pre-commit should run at commit time. If for some reason it does not, ensure you have it installed.
-- Open a PR and fill out the template
+- Add your change to CHANGELOG.md
+- Open a PR and fill out the PR template
 
 **Useful Dev Commands**
 
@@ -34,14 +34,14 @@ At this point, you're ready to make some changes! When attempting to commit, pre
 # run all pre-commit checks
 pre-commit run --all-files
 
-# update docs
+# update READMEs via terraform-docs
 pre-commit run terraform-docs-go --all-files
-
-# terraform format everything
-pre-commit run terraform_fmt --all-files
 
 # terraform-lint everything
 pre-commit run terraform_tflint --all-files
+
+# terraform format everything
+terraform fmt --recursive
 ```
 
 **Optional Setup**
@@ -50,8 +50,6 @@ pre-commit run terraform_tflint --all-files
   - Needed if updating the default, built-in stac-server version
 - terraform-docs
   - Installing pre-commit enables you to `pre-commit run terraform-docs-go --all-files` to update documentation. For a little more control, directly install terraform-docs and use `terraform-docs .` at the root of this repo. For parity with our CICD tests, install the version of terraform-docs denoted in .pre-commit-config.yaml
-- tflint
-  - pre-commit enables `pre-commit run terraform_tflint --all-files`. For more control, direclty install tflint and use `tflint --recursive` at the root of this repo. For parity with out CICD tests, install the version of tflint denoted in .github/workflows/reusable-precommit.yml
 
 **Updating the Default, Built-In stac-server Version**
 
