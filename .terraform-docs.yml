@@ -11,8 +11,8 @@ sections:
     - data-sources
 
 settings:
-  # extract provider versions from .tf rather than from your specific lockfile. without this, building
-  # docs will vary between developers (and cicd), due to differing lockfiles
+  # extract provider versions from providers.tf rather than from your specific lockfile. without
+  # this, building docs will vary between developers (and cicd), due to differing lockfiles
   lockfile: false
 
 output:
