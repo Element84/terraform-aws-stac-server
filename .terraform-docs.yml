@@ -1,0 +1,20 @@
+formatter: "markdown"
+
+# update module readmes
+recursive:
+  enabled: true
+  path: modules
+
+sections:
+  hide:
+    - resources
+    - data-sources
+
+output:
+  file: "README.md"
+  # enrich README with module documentation, rather than overwriting the entire file
+  mode: "inject"
+  template: |-
+    <!-- BEGIN_TF_DOCS -->
+    {{ .Content }}
+    <!-- END_TF_DOCS -->
