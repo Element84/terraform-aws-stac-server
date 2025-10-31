@@ -24,16 +24,6 @@ else
 fi
 STAC_SERVER_DIR="stac-server-${STAC_SERVER_TAG:1}"
 
-
-# Check if all three lambda zip files exist
-echo "Verifying lambda zip files..."
-if [ -f "lambda/api/api.zip" ] && [ -f "lambda/ingest/ingest.zip" ] && [ -f "lambda/pre-hook/pre-hook.zip" ]; then
-    echo "All lambda zip files are present"
-else
-    echo "ERROR: One or more lambda zip files are missing"
-    exit 1
-fi
-
 # remove the lambda zips. we'll test at the end to ensure they were successfully created
 rm lambda/api/api.zip
 rm lambda/ingest/ingest.zip
@@ -53,7 +43,7 @@ nvm install && nvm use
 npm install
 BUILD_PRE_HOOK=true npm run build
 cd ..
- 
+
 echo "Copying stac-server lambdas..."
 cp "$STAC_SERVER_DIR/dist/api/api.zip" lambda/api/
 cp "$STAC_SERVER_DIR/dist/ingest/ingest.zip" lambda/ingest/
