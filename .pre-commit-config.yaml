@@ -3,7 +3,9 @@ repos:
     rev: v1.103.0
     hooks:
       - id: terraform_fmt
+        name: terraform fmt
       - id: terraform_tflint
+        name: tflint
 
   # note that pre-commit-terraform does have a built-in terraform_docs hook, but it does not
   # handle things like recursive.enabled: true well. recommended using this official terraform-docs
@@ -17,5 +19,5 @@ repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.14.2
     hooks:
-      - id: ruff
+      - id: ruff-check
       - id: ruff-format
