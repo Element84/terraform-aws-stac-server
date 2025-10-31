@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+- Improved update-lambdas to ensure zips get built
+
 - Support inputs.stac_server_version usage
 
 - CICD setup
