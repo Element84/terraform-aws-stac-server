@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+- Improved update-lambdas to ensure zips get built
+
 ### Changed
 
 - Moved modules to a /modules folder
@@ -16,6 +18,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 ### Removed
+
+
+
 
 ## [1.0.0] - 2025-10-30
 

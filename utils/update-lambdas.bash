@@ -24,6 +24,12 @@ else
 fi
 STAC_SERVER_DIR="stac-server-${STAC_SERVER_TAG:1}"
 
+# remove the lambda zips. we'll test at the end to ensure they were successfully created
+rm lambda/api/api.zip
+rm lambda/ingest/ingest.zip
+rm lambda/pre-hook/pre-hook.zip
+rm modules/historical-ingest/lambda.zip
+
 echo "Downloading stac-server $STAC_SERVER_TAG to $STAC_SERVER_DIR..."
 curl -L -f --no-progress-meter -o stac-server.tgz "https://github.com/stac-utils/stac-server/archive/refs/tags/${STAC_SERVER_TAG}.tar.gz"
 tar -xzf stac-server.tgz
@@ -49,6 +55,15 @@ cd package
 zip -r ../../lambda.zip .
 cd ..
 zip ../lambda.zip main.py
-cd ../..
+cd ../../..
+
+# Check if all three lambda zip files exist
+echo "Verifying lambda zip files..."
+if [ -f "lambda/api/api.zip" ] && [ -f "lambda/ingest/ingest.zip" ] && [ -f "lambda/pre-hook/pre-hook.zip" ] && [ -f "modules/historical-ingest/lambda.zip" ]; then
+    echo "All lambda zip files are present"
+else
+    echo "ERROR: One or more lambda zip files are missing"
+    exit 1
+fi
 
 echo "Done!"

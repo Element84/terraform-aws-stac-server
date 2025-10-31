@@ -37,7 +37,7 @@ pre-commit run --all-files
 # update READMEs via terraform-docs
 pre-commit run terraform-docs-go --all-files
 
-# terraform-lint everything
+# tflint everything
 pre-commit run terraform_tflint --all-files
 
 # terraform format everything
@@ -51,7 +51,7 @@ terraform fmt --recursive
 - terraform-docs
   - Installing pre-commit enables you to `pre-commit run terraform-docs-go --all-files` to update documentation. For a little more control, directly install terraform-docs and use `terraform-docs .` at the root of this repo. For parity with our CICD tests, install the version of terraform-docs denoted in .pre-commit-config.yaml
 
-**Updating the Default, Built-In stac-server Version**
+## Updating the Default, Built-In stac-server Version
 
 We package a specific stac-server version with each release of this repository. To change this packaged version:
 
