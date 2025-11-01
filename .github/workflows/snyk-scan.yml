@@ -26,7 +26,7 @@ jobs:
         uses: snyk/actions/iac@v1.0.0
         continue-on-error: true # To make sure that SARIF upload gets called
         env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          SNYK_TOKEN: ${{ secrets.FD_CICD_SYNK_TOKEN }}
         with:
           args: --sarif-file-output=snyk.sarif
 
@@ -39,7 +39,7 @@ jobs:
       - name: Snyk IaC gatekeeper
         uses: snyk/actions/iac@v1.0.0
         env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          SNYK_TOKEN: ${{ secrets.FD_CICD_SYNK_TOKEN }}
         with:
           args:
             --sarif-file-output=snyk.sarif
