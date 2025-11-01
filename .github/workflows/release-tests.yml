@@ -37,7 +37,6 @@ jobs:
       # TODO: delete this after testing
       - name: Test post to slack
         id: test-slack
-        continue-on-error: true
         uses: slackapi/slack-github-action@v2.1.1
         with:
           method: chat.postMessage
@@ -45,6 +44,15 @@ jobs:
           payload: |
             channel: ${{ secrets.FD_CICD_SLACK_CHANNEL_ID }}
             text: ":badger_dance: terraform-aws-stac-server - ${{  github.ref_name }} terraform apply job has succeeded!\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+
+      - name: Test post to slack2
+        id: tf_apply_successs
+        uses: slackapi/slack-github-action@v1.26.0
+        with:
+          channel-id: ${{ secrets.FD_CICD_SLACK_CHANNEL_ID }}
+          slack-message: ":badger_dance: terraform-aws-stac-server - ${{  github.ref_name }} terraform apply job has succeeded!\n${{ github.event.pull_request.html_url || github.event.head_commit.url }} -- #2"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.FD_CICD_SLACK_BOT_TOKEN }}
 
       # Here we read the terraform version from the .terraform-version file, and then install that version
       - name: Get Terraform version
