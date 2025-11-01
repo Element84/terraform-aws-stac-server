@@ -52,14 +52,53 @@ additional_ingest_sqs_senders_arns        = []
 api_rest_type                             = "EDGE"
 api_method_authorization_type             = "NONE"
 private_api_additional_security_group_ids = null
-api_lambda                                = null
-ingest_lambda                             = null
-pre_hook_lambda                           = null
-authorized_s3_arns                        = []
-private_certificate_arn                   = ""
-vpce_private_dns_enabled                  = false
-domain_alias                              = ""
-stac_api_url                              = ""
+
+api_lambda = null
+# example custom usage
+# api_lambda = {
+#   zip_filepath = "artifacts/stac-server/stac-server-v4.4.0-api-lambda-dist.zip"
+#   runtime               = "nodejs20.x"
+#   handler               = "index.handler"
+#   memory_mb             = 1024
+#   timeout_seconds       = 30
+#   environment_variables = {
+#     ENABLE_CONTEXT_EXTENSION = "true"
+#     ENABLE_THUMBNAILS        = "true"
+#   }
+# }
+
+ingest_lambda = null
+# example custom usage
+# ingest_lambda = {
+#   zip_filepath = "artifacts/stac-server/stac-server-v4.4.0-ingest-lambda-dist.zip"
+#   runtime               = "nodejs20.x"
+#   handler               = "index.handler"
+#   memory_mb             = 1024
+#   timeout_seconds       = 30
+#   environment_variables = {
+#     ENABLE_CONTEXT_EXTENSION = "true"
+#     ENABLE_THUMBNAILS        = "true"
+#   }
+# }
+
+pre_hook_lambda = null
+# example custom usage
+# pre_hook_lambda = {
+#   zip_filepath = "artifacts/stac-server/stac-server-v4.4.0-pre-hook-lambda-dist.zip"
+#   runtime               = "nodejs20.x"
+#   handler               = "index.handler"
+#   memory_mb             = 1024
+#   timeout_seconds       = 30
+#   environment_variables = {
+#     SOMEVAR = "true"
+#   }
+# }
+
+authorized_s3_arns       = []
+private_certificate_arn  = ""
+vpce_private_dns_enabled = false
+domain_alias             = ""
+stac_api_url             = ""
 # stac_docs_url
 # stac_api_stage_description
 cors_origin      = "*"
