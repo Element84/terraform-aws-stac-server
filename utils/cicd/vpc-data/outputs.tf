@@ -7,7 +7,7 @@ output "vpc_cidr" {
 }
 
 output "private_subnet_ids" {
-  value = values(data.aws_subnet.private_subnets)[*].id
+  value = data.aws_subnets.private.ids
 }
 
 output "security_group_id" {
