@@ -1,6 +1,9 @@
 name: Main Branch and Release Testing
 
 on:
+  # TODO: remove after testing
+  pull_request:
+    branches: ["main"]
   push:
     branches: ["main"]
     tags: ["v*.*.*"]
@@ -8,7 +11,6 @@ on:
   workflow_dispatch:
 
 # TODO:
-# - Github env vars/secrets made available to this repo 
 # - After full testing, uncomment slack channel status
 
 jobs:
@@ -53,13 +55,13 @@ jobs:
         id: update_stac_lambdas
         run: ./utils/update-lambdas.bash
 
-      # - name: Configure Terraform Init Credentials
-      #   id: init_creds
-      #   uses: aws-actions/configure-aws-credentials@v5
-      #   with:
-      #     aws-region: ${{ secrets.FD_CICD_AWS_REGION }}
-      #     role-to-assume: ${{ secrets.FD_CICD_AWS_ROLE }}
-      #     role-session-name: GitHubReleaseInit
+      - name: Configure Terraform Init Credentials
+        id: init_creds
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          aws-region: ${{ secrets.FD_CICD_AWS_REGION }}
+          role-to-assume: ${{ secrets.FD_CICD_AWS_ROLE }}
+          role-session-name: GitHubReleaseInit
 
       - name: Terraform Init
         id: tf_init
@@ -71,13 +73,13 @@ jobs:
         working-directory: utils/cicd
         run: terraform validate
 
-      # - name: Configure Terraform Plan Credentials
-      #   id: plan_creds
-      #   uses: aws-actions/configure-aws-credentials@v5
-      #   with:
-      #     aws-region: ${{ secrets.FD_CICD_AWS_REGION }}
-      #     role-to-assume: ${{ secrets.FD_CICD_AWS_ROLE }}
-      #     role-session-name: GitHubReleasePlan
+      - name: Configure Terraform Plan Credentials
+        id: plan_creds
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          aws-region: ${{ secrets.FD_CICD_AWS_REGION }}
+          role-to-assume: ${{ secrets.FD_CICD_AWS_ROLE }}
+          role-session-name: GitHubReleasePlan
 
       - name: Terraform Plan
         id: tf_plan
