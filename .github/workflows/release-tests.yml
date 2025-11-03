@@ -49,12 +49,13 @@ jobs:
       # TODO: fix this with the new cicd module
       - name: Preparing Environment
         id: prep_env
+        working-directory: utils/cicd
         run: |
-          sed -i 's|VAR-TF_STATE_BUCKET|${{ secrets.TF_STATE_BUCKET }}|g' utils/cicd/backend.tf
-          sed -i 's|VAR-AWS_REGION|${{ secrets.AWS_REGION}}|g' utils/cicd/backend.tf
-          sed -i 's|VAR-GITHUB_REPOSITORY|${{ env.REPOSITORY_NAME }}|g' utils/cicd/backend.tf
+          sed -i 's|VAR-TF_STATE_BUCKET|${{ secrets.TF_STATE_BUCKET }}|g' backend.tf
+          sed -i 's|VAR-AWS_REGION|${{ secrets.AWS_REGION}}|g' backend.tf
+          sed -i 's|VAR-GITHUB_REPOSITORY|something|g' backend.tf
           echo -e backend.tf contents:\n"
-          cat utils/cicd/backend.tf
+          cat backend.tf
 
       # - name: Update stac-server lambdas
       #   id: update_stac_lambdas
