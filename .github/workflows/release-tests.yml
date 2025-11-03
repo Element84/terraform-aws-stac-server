@@ -86,19 +86,19 @@ jobs:
         working-directory: utils/cicd
         run: terraform plan -out test.tfplan
 
-      # - name: Configure Terraform Apply Credentials
-      #   id: apply_creds
-      #   uses: aws-actions/configure-aws-credentials@v5
-      #   with:
-      #     aws-region: ${{ secrets.FD_CICD_AWS_REGION }}
-      #     role-to-assume: ${{ secrets.FD_CICD_AWS_ROLE }}
-      #     role-session-name: GitHubReleaseApply
+      - name: Configure Terraform Apply Credentials
+        id: apply_creds
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          aws-region: ${{ secrets.FD_CICD_AWS_REGION }}
+          role-to-assume: ${{ secrets.FD_CICD_AWS_ROLE }}
+          role-session-name: GitHubReleaseApply
 
-      # - name: Terraform Apply
-      #   id: tf_apply
-      #   continue-on-error: true
-      #   working-directory: utils/cicd
-      #   run: terraform apply -input=false test.tfplan
+      - name: Terraform Apply
+        id: tf_apply
+        continue-on-error: true
+        working-directory: utils/cicd
+        run: terraform apply -input=false test.tfplan
 
       # - name: Post tf_apply success status to Slack channel
       #   id: tf_apply_successs
@@ -124,36 +124,36 @@ jobs:
       #       channel: ${{ secrets.FD_CICD_SLACK_CHANNEL_ID }}
       #       text: ":sadpanda: terraform-aws-stac-server -${{  github.ref_name }} terraform apply has failed!\n:alert: make sure cleanup job deletes all AWS resources!\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
 
-      # - name: Configure Terraform Cleanup Check Credentials
-      #   id: cleanup_check_creds
-      #   if: always()
-      #   uses: aws-actions/configure-aws-credentials@v5
-      #   with:
-      #     aws-region: ${{ secrets.FD_CICD_AWS_REGION }}
-      #     role-to-assume: ${{ secrets.FD_CICD_AWS_ROLE }}
-      #     role-session-name: GitHubReleaseCleanupCheck
+      - name: Configure Terraform Cleanup Check Credentials
+        id: cleanup_check_creds
+        if: always()
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          aws-region: ${{ secrets.FD_CICD_AWS_REGION }}
+          role-to-assume: ${{ secrets.FD_CICD_AWS_ROLE }}
+          role-session-name: GitHubReleaseCleanupCheck
 
-      # - name: Terraform Destroy Pre-Check
-      #   id: tf_destroy_plan
-      #   if: always()
-      #   working-directory: utils/cicd
-      #   run: terraform plan -destroy -out test-cleanup.tfplan
+      - name: Terraform Destroy Pre-Check
+        id: tf_destroy_plan
+        if: always()
+        working-directory: utils/cicd
+        run: terraform plan -destroy -out test-cleanup.tfplan
 
-      # - name: Configure Terraform Cleanup Credentials
-      #   id: cleanup_creds
-      #   if: always()
-      #   uses: aws-actions/configure-aws-credentials@v5
-      #   with:
-      #     aws-region: ${{ secrets.FD_CICD_AWS_REGION }}
-      #     role-to-assume: ${{ secrets.FD_CICD_AWS_ROLE }}
-      #     role-session-name: GitHubReleaseCleanup
+      - name: Configure Terraform Cleanup Credentials
+        id: cleanup_creds
+        if: always()
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          aws-region: ${{ secrets.FD_CICD_AWS_REGION }}
+          role-to-assume: ${{ secrets.FD_CICD_AWS_ROLE }}
+          role-session-name: GitHubReleaseCleanup
 
-      # - name: Terraform Destroy
-      #   id: tf_destroy_apply
-      #   if: always()
-      #   continue-on-error: true
-      #   working-directory: utils/cicd
-      #   run: terraform apply -destroy -input=false test-cleanup.tfplan
+      - name: Terraform Destroy
+        id: tf_destroy_apply
+        if: always()
+        continue-on-error: true
+        working-directory: utils/cicd
+        run: terraform apply -destroy -input=false test-cleanup.tfplan
 
       # - name: Post tf_destroy success status to Slack channel
       #   id: tf_destroy_apply_successs
