@@ -54,7 +54,7 @@ jobs:
         run: |
           sed -i 's|VAR-TF_STATE_BUCKET|${{ secrets.FD_CICD_TF_STATE_BUCKET }}|g' backend.tf
           sed -i 's|VAR-AWS_REGION|${{ secrets.FD_CICD_AWS_REGION}}|g' backend.tf
-          sed -i 's|VAR-GITHUB_REPOSITORY|$REPOSITORY_NAME|g' backend.tf
+          sed -i 's|VAR-GITHUB_REPOSITORY|"$REPOSITORY_NAME"|g' backend.tf
           echo -e "\n cicd backend.tf contents:\n"
           cat backend.tf
           echo "and......."
