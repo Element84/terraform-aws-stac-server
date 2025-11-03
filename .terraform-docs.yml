@@ -9,6 +9,7 @@ sections:
   hide:
     - resources
     - data-sources
+    - providers
 
 settings:
   # extract provider versions from providers.tf rather than from your specific lockfile. without
