@@ -13,12 +13,6 @@ This module creates new collections in a new/destination STAC catalog, then quer
 | <a name="requirement_null"></a> [null](#requirement\_null) | ~> 3.2 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | ~> 3.5 |
 
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | ~> 5.22 |
-
 ## Modules
 
 No modules.

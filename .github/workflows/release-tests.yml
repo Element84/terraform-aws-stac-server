@@ -108,7 +108,7 @@ jobs:
           token: ${{ secrets.FD_CICD_SLACK_BOT_TOKEN }}
           payload: |
             channel: ${{ secrets.FD_CICD_SLACK_CHANNEL_ID }}
-            text: ":badger_dance: terraform-aws-stac-server - ${{  github.ref_name }} terraform apply job has succeeded!\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+            text: ":badger_dance: terraform-aws-stac-server - ${{  github.ref_name }} - terraform apply job has succeeded!\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
 
       - name: Post tf_apply failure status to Slack channel
         id: tf_apply_failure
@@ -120,7 +120,7 @@ jobs:
           token: ${{ secrets.FD_CICD_SLACK_BOT_TOKEN }}
           payload: |
             channel: ${{ secrets.FD_CICD_SLACK_CHANNEL_ID }}
-            text: ":sadpanda: terraform-aws-stac-server -${{  github.ref_name }} terraform apply has failed!\n:alert: make sure cleanup job deletes all AWS resources!\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+            text: ":sadpanda: terraform-aws-stac-server - ${{  github.ref_name }} - terraform apply has failed!\n:alert: make sure cleanup job deletes all AWS resources!\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
 
       - name: Configure Terraform Cleanup Check Credentials
         id: cleanup_check_creds
@@ -163,7 +163,7 @@ jobs:
           token: ${{ secrets.FD_CICD_SLACK_BOT_TOKEN }}
           payload: |
             channel: ${{ secrets.FD_CICD_SLACK_CHANNEL_ID }}
-            text: ":badger_dance: terraform-aws-stac-server - ${{  github.ref_name }} cleanup job has succeeded!\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+            text: ":badger_dance: terraform-aws-stac-server - ${{  github.ref_name }} - cleanup job has succeeded!\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
 
       - name: Post tf_destroy failure status to Slack channel
         id: tf_destroy_apply_failure
@@ -175,4 +175,4 @@ jobs:
           token: ${{ secrets.FD_CICD_SLACK_BOT_TOKEN }}
           payload: |
             channel: ${{ secrets.FD_CICD_SLACK_CHANNEL_ID }}
-            text: ":sadpanda: terraform-aws-stac-server -${{  github.ref_name }} cleanup job has failed!\n:alert: make sure AWS resources are deleted!\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+            text: ":sadpanda: terraform-aws-stac-server - ${{  github.ref_name }} - cleanup job has failed!\n:alert: make sure AWS resources are deleted!\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
