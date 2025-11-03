@@ -135,7 +135,7 @@ jobs:
 
       # - name: Terraform Destroy Pre-Check     #   id: tf_destroy_plan
       #   if: always()
-        working-directory: utils/cicd
+      #   working-directory: utils/cicd
       #   run: terraformlan -destroy -out test-cleanup.tfplan
 
     # - name: Configure Terrafo Cleanup Credentials
@@ -147,7 +147,7 @@ jobs:
       #     rolto-assume: ${{ secretAWS_ROLE }}
       #     role-session-name: GitHubReleasleanup
 
-      - name: Terraform Destroy
+#      - name: Terraform Destroy
       #   id: tf_destroy_apply     #   if: always()
       #   continue-on-error: true
     #   working-directory: utils/cicd
