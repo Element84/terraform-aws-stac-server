@@ -6,20 +6,11 @@ An opinionated way of deploying [stac-server](https://github.com/stac-utils/stac
 
 A default version of stac-server is packaged with this module. See the default value of `stac_server_version` in `inputs.tf` for the currently packaged version, and note that it can be overridden. Use caution when overriding the default version; we cannot guarantee the infrastructure deployed by this module will support versions of stac-server that it has not been tested with.
 
-<p align="center">
-  <a href="https://github.com/Element84/terraform-aws-stac-server/actions?query=workflow%3AContinuous%20integration" target="_blank">
-      <img src="https://github.com/Element84/terraform-aws-stac-server/workflows/Continuous%20integration/badge.svg" alt="CI/CD">
-  </a>&nbsp;
-  <a href="https://github.com/Element84/terraform-aws-stac-server/actions?query=workflow%3ASnyk%20Scan" target="_blank">
-      <img src="https://github.com/Element84/terraform-aws-stac-server/workflows/Snyk%20Scan/badge.svg" alt="Snyk Scan">
-  </a>&nbsp;
-  <a href="https://github.com/Element84/terraform-aws-stac-server/releases" target="_blank">
-      <img src="https://img.shields.io/github/v/release/Element84/terraform-aws-stac-server?color=2334D058" alt="Release version">
-  </a>&nbsp;
-  <a href="https://github.com/Element84/terraform-aws-stac-server/blob/main/LICENSE" target="_blank">
-      <img src="https://img.shields.io/github/license/Element84/terraform-aws-stac-server?color=2334D058" alt="License">
-  </a>
-</p>
+[![CI](https://github.com/Element84/terraform-aws-stac-server/actions/workflows/ci.yml/badge.svg)](https://github.com/Element84/terraform-aws-stac-server/actions/workflows/ci.yml)
+[![Release Tests](https://github.com/Element84/terraform-aws-stac-server/actions/workflows/release-tests.yml/badge.svg)](https://github.com/Element84/terraform-aws-stac-server/actions/workflows/release-tests.yml)
+[![Snyk Scan](https://github.com/Element84/terraform-aws-stac-server/actions/workflows/snyk-scan.yml/badge.svg)](https://github.com/Element84/terraform-aws-stac-server/actions/workflows/snyk-scan.yml)
+[![GitHub Release](https://img.shields.io/github/v/release/Element84/terraform-aws-stac-server?color=2334D058)]()  [![License](https://img.shields.io/github/license/Element84/terraform-aws-stac-server?color=2334D058)]()
+
 
 ## General Usage
 
