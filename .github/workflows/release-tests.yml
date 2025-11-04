@@ -1,4 +1,4 @@
-name: Main Branch and Release Testing
+name: Release Tests
 
 on:
   push:
@@ -26,11 +26,13 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      # Truncate and s3-friendly-ify tfstate filename
+      # TF_STATE_FILENAME
+      # - Here we create an s3-friendly terraform state filename, based on the branch/tag name and commit sha. Note
+      #   that we need this to be unique per workflow run to avoid statefile conflicts, thus the sha addition
       - name: Prereqs
         id: prereqs
         run: |
-          echo "REPOSITORY_NAME=`echo \"${{  github.ref_name }}\" | tr -d './' | cut -c1-15`" >> $GITHUB_ENV
+          echo "TF_STATE_FILENAME=`echo \"${{  github.ref_name }}-${{ github.sha }}\" | tr -d './' | cut -c1-15`" >> $GITHUB_ENV
 
       # Here we read the terraform version from the .terraform-version file, and then install that version
       - name: Get Terraform version
@@ -47,7 +49,7 @@ jobs:
         run: |
           sed -i "s|VAR-TF_STATE_BUCKET|${{ secrets.FD_CICD_TF_STATE_BUCKET }}|g" backend.tf
           sed -i "s|VAR-AWS_REGION|${{ secrets.FD_CICD_AWS_REGION}}|g" backend.tf
-          sed -i "s|VAR-GITHUB_REPOSITORY|$REPOSITORY_NAME|g" backend.tf
+          sed -i "s|VAR-TF_STATE_FILENAME|$TF_STATE_FILENAME|g" backend.tf
 
       - name: Update stac-server lambdas
         id: update_stac_lambdas

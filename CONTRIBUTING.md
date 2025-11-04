@@ -25,7 +25,8 @@ At this point, you're ready to make some changes! When attempting to commit, pre
 
 - Clone this repository, create a branch
 - Make a great contribution!
-- Add your change to CHANGELOG.md
+- Validate and test your changes by deploying to AWS
+- Add your change to [CHANGELOG.md](./CHANGELOG.md)
 - Open a PR and fill out the PR template
 
 **Useful Dev Commands**
