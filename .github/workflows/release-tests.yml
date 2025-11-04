@@ -1,9 +1,11 @@
 name: Main Branch and Release Testing
 
 on:
+  # TODO: remove after testing
+  pull_request:
+    branches: ["main"]
   push:
-    # TODO: discuss with team, do we really want entire release test on each push to main?
-    # branches: ["main"]
+    branches: ["main"]
     tags: ["v*.*.*"]
   # Allows manual testing
   workflow_dispatch:
