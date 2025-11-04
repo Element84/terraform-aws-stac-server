@@ -1,6 +1,6 @@
 ## Contributing
 
-We would love for you to contribute! Please follow the steps below to get started.
+We would love for you to contribute! Follow the steps below to get started, and please read the [Code of Conduct](./CODE_OF_CONDUCT.md) prior to your first commit.
 
 ## Dev Environment Setup
 

@@ -10,12 +10,12 @@ deploy_local_stac_server_artifacts       = false
 deploy_stac_server_opensearch_serverless = true
 deploy_stac_server_outside_vpc           = false
 
-# NOTE: you will need to populate these VPC values appropriately
+# NOTE: edit these VPC values with your AWS environment, the values below are placeholders
 # vpc
-vpc_id                 = ""
-vpc_cidr_range         = ""
-vpc_subnet_ids         = ""
-vpc_security_group_ids = ""
+vpc_id                 = "vpc-123456789"
+vpc_cidr_range         = "10.0.0.0/16"
+vpc_subnet_ids         = ["subnet-123456789"]
+vpc_security_group_ids = ["sg-123456789"]
 
 # and more!
 enable_transactions_extension = false

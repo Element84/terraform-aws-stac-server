@@ -8,14 +8,14 @@ A default version of stac-server is packaged with this module. See the default v
 
 <p align="center">
   <a href="https://github.com/Element84/terraform-aws-stac-server/actions?query=workflow%3AContinuous%20integration" target="_blank">
-      <img src="https://github.com/Element84/terraform-aws-stac-server/workflows/Continuous%20integration/badge.svg" alt="Test">
-  </a>
+      <img src="https://github.com/Element84/terraform-aws-stac-server/workflows/Continuous%20integration/badge.svg" alt="CI/CD">
+  </a>&nbsp;
   <a href="https://github.com/Element84/terraform-aws-stac-server/actions?query=workflow%3ASnyk%20Scan" target="_blank">
-      <img src="https://github.com/Element84/terraform-aws-stac-server/workflows/Snyk%20Scan/badge.svg" alt="Test">
-  </a>
+      <img src="https://github.com/Element84/terraform-aws-stac-server/workflows/Snyk%20Scan/badge.svg" alt="Snyk Scan">
+  </a>&nbsp;
   <a href="https://github.com/Element84/terraform-aws-stac-server/releases" target="_blank">
       <img src="https://img.shields.io/github/v/release/Element84/terraform-aws-stac-server?color=2334D058" alt="Release version">
-  </a>
+  </a>&nbsp;
   <a href="https://github.com/Element84/terraform-aws-stac-server/blob/main/LICENSE" target="_blank">
       <img src="https://img.shields.io/github/license/Element84/terraform-aws-stac-server?color=2334D058" alt="License">
   </a>
@@ -30,6 +30,17 @@ Example usages:
 - [filmdrop-aws-tf-modules](https://github.com/Element84/filmdrop-aws-tf-modules) is a complete working example usage in the core FilmDrop module
 
 - `/utils/cicd` in this repository provides an example used in our CI/CD tests
+
+**Quickstart**
+
+- Clone this repository
+- Authenticate to the AWS account you're deploying to
+- Install [tfenv](https://github.com/tfutils/tfenv), then use it to install Terraform: `tfenv install` 
+  - This will install the specific Terraform version denoted in `.terraform-version`, which has been explicitly tested with this module. As an alternative to using tfenv, simply install that version of Terraform directly
+- Optionally add a `backend.tf` to point to a remote Terraform state store, rather than storing state locally. See `/utils/cicd` for an S3 example
+- Initialize Terraform: `terraform init`
+- Edit `default.tfvars`, noting that some var values are invalid placeholders which must be updated
+- You're now ready to validate/plan/apply, e.g. `terraform apply -var-file=default.tfvars`
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
