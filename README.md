@@ -6,21 +6,20 @@ An opinionated way of deploying [stac-server](https://github.com/stac-utils/stac
 
 A default version of stac-server is packaged with this module. See the default value of `stac_server_version` in `inputs.tf` for the currently packaged version, and note that it can be overridden. Use caution when overriding the default version; we cannot guarantee the infrastructure deployed by this module will support versions of stac-server that it has not been tested with.
 
+<!-- yes, newline required after <div> to separate html -->
+<div align="center">
+
 [![CI](https://github.com/Element84/terraform-aws-stac-server/actions/workflows/ci.yml/badge.svg)](https://github.com/Element84/terraform-aws-stac-server/actions/workflows/ci.yml)
 [![Release Tests](https://github.com/Element84/terraform-aws-stac-server/actions/workflows/release-tests.yml/badge.svg)](https://github.com/Element84/terraform-aws-stac-server/actions/workflows/release-tests.yml)
 [![Snyk Scan](https://github.com/Element84/terraform-aws-stac-server/actions/workflows/snyk-scan.yml/badge.svg)](https://github.com/Element84/terraform-aws-stac-server/actions/workflows/snyk-scan.yml)
 [![GitHub Release](https://img.shields.io/github/v/release/Element84/terraform-aws-stac-server?color=2334D058)]()  [![License](https://img.shields.io/github/license/Element84/terraform-aws-stac-server?color=2334D058)]()
 
+</div>
+
 
 ## General Usage
 
 While this module is most commonly used in conjunction with a FilmDrop deployment, it can be deployed as a standalone STAC server. As a prerequisite, a VPC in an AWS account which contains at least one private subnet will be needed.
-
-Example usages:
-
-- [filmdrop-aws-tf-modules](https://github.com/Element84/filmdrop-aws-tf-modules) is a complete working example usage in the core FilmDrop module
-
-- `/utils/cicd` in this repository provides an example used in our CI/CD tests
 
 **Quickstart**
 
@@ -28,10 +27,16 @@ Example usages:
 - Authenticate to the AWS account you're deploying to
 - Install [tfenv](https://github.com/tfutils/tfenv), then use it to install Terraform: `tfenv install` 
   - This will install the specific Terraform version denoted in `.terraform-version`, which has been explicitly tested with this module. As an alternative to using tfenv, simply install that version of Terraform directly
-- Optionally add a `backend.tf` to point to a remote Terraform state store, rather than storing state locally. See `/utils/cicd` for an S3 example
+- Optionally point to a remote Terraform state store, rather than storing state locally. See [/utils/cicd](./utils/cicd) for an S3 example
 - Initialize Terraform: `terraform init`
 - Edit `default.tfvars`, noting that some var values are invalid placeholders which must be updated
 - You're now ready to validate/plan/apply, e.g. `terraform apply -var-file=default.tfvars`
+
+**Example Usages:**
+
+- [/utils/cicd](./utils/cicd) in this repository provides an example used by our CI/CD tests
+
+- [filmdrop-aws-tf-modules](https://github.com/Element84/filmdrop-aws-tf-modules) is a complete working example usage in the core FilmDrop module
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
