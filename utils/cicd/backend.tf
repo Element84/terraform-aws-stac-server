@@ -4,7 +4,7 @@ terraform {
     # these are injected from env vars by CICD
     bucket       = "VAR-TF_STATE_BUCKET"
     region       = "VAR-AWS_REGION"
-    key          = "VAR-TF_STATE_FILENAME-cicd-stac-server.tfstate"
+    key          = "stac-server-cicd-VAR-TF_STATE_FILENAME.tfstate"
     use_lockfile = true
   }
 }
