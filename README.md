@@ -40,7 +40,7 @@ Example usages:
 - Optionally add a `backend.tf` to point to a remote Terraform state store, rather than storing state locally. See `/utils/cicd` for an S3 example
 - Initialize Terraform: `terraform init`
 - Edit `default.tfvars`, noting that some var values are invalid placeholders which must be updated
-- Plan and/or apply your Terraform, e.g. `terraform plan -var-file=default.tfvars`
+- You're now ready to validate/plan/apply, e.g. `terraform apply -var-file=default.tfvars`
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
