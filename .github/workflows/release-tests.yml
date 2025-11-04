@@ -2,7 +2,8 @@ name: Main Branch and Release Testing
 
 on:
   push:
-    branches: ["main"]
+    # TODO: discuss with team, do we really want entire release test on each push to main?
+    # branches: ["main"]
     tags: ["v*.*.*"]
   # Allows manual testing
   workflow_dispatch:
