@@ -2,8 +2,7 @@ name: Main Branch and Release Testing
 
 on:
   push:
-    # TODO: discuss with team, do we really want entire release test on each push to main?
-    # branches: ["main"]
+    branches: ["main"]
     tags: ["v*.*.*"]
   # Allows manual testing
   workflow_dispatch:
@@ -99,9 +98,10 @@ jobs:
         working-directory: utils/cicd
         run: terraform apply -input=false test.tfplan
 
+        # Note that we only send success messages on tags, not all pushes to main
       - name: Post tf_apply success status to Slack channel
         id: tf_apply_successs
-        if: steps.tf_apply.outcome == 'success'
+        if: steps.tf_apply.outcome == 'success' && github.ref_name != 'main'
         continue-on-error: true
         uses: slackapi/slack-github-action@v2.1.1
         with:
@@ -154,9 +154,10 @@ jobs:
         working-directory: utils/cicd
         run: terraform apply -destroy -input=false test-cleanup.tfplan
 
+        # Note that we only send success messages on tags, not all pushes to main
       - name: Post tf_destroy success status to Slack channel
         id: tf_destroy_apply_successs
-        if: steps.tf_destroy_apply.outcome == 'success'
+        if: steps.tf_destroy_apply.outcome == 'success' && github.ref_name != 'main'
         continue-on-error: true
         uses: slackapi/slack-github-action@v2.1.1
         with:
