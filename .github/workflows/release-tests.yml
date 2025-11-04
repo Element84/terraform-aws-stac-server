@@ -36,6 +36,10 @@ jobs:
         id: prereqs
         run: |
           echo "TF_STATE_FILENAME=`echo \"${{  github.ref_name }}-${{ github.sha }}\" | tr -d './' | cut -c1-15`" >> $GITHUB_ENV
+
+      # TODO: remove after testing
+      - name: Show TF_STATE_FILENAME
+        run: |
           echo $TF_STATE_FILENAME
 
       # # Here we read the terraform version from the .terraform-version file, and then install that version
