@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### ⚠️ Breaking
 
-- The minimum version of OpenSearch that [stac-server](https://github.com/stac-utils/stac-server) expects was bumped from 2.17 to 2.19
+- The minimum version of OpenSearch that [stac-server](https://github.com/stac-utils/stac-server) expects was bumped from 2.17 to 2.19. While this may or may not be technically breaking, the docs aren't entirely clear, stac-server pre-release tests run on 2.19. To be on the conservative side, here we assume it's required
 
 ## [1.0.2] - 2025-11-03
 

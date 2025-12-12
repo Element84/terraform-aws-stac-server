@@ -34,7 +34,7 @@ variable "stac_server_version" {
   DESCRIPTION
 
   type    = string
-  default = "v3.10.0"
+  default = "v4.5.0"
 }
 
 variable "stac_api_stage" {
