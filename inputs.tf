@@ -320,7 +320,7 @@ variable "api_lambda" {
 
   type = object({
     zip_filepath          = optional(string)
-    runtime               = optional(string, "nodejs20.x")
+    runtime               = optional(string, "nodejs22.x")
     handler               = optional(string, "index.handler")
     memory_mb             = optional(number, 1024)
     timeout_seconds       = optional(number, 30)
@@ -328,7 +328,7 @@ variable "api_lambda" {
   })
   default = {
     zip_filepath          = null
-    runtime               = "nodejs20.x"
+    runtime               = "nodejs22.x"
     handler               = "index.handler"
     memory_mb             = 1024
     timeout_seconds       = 30
@@ -354,7 +354,7 @@ variable "ingest_lambda" {
 
   type = object({
     zip_filepath          = optional(string)
-    runtime               = optional(string, "nodejs20.x")
+    runtime               = optional(string, "nodejs22.x")
     handler               = optional(string, "index.handler")
     memory_mb             = optional(number, 512)
     timeout_seconds       = optional(number, 60)
@@ -362,7 +362,7 @@ variable "ingest_lambda" {
   })
   default = {
     zip_filepath          = null
-    runtime               = "nodejs20.x"
+    runtime               = "nodejs22.x"
     handler               = "index.handler"
     memory_mb             = 512
     timeout_seconds       = 60
@@ -388,7 +388,7 @@ variable "pre_hook_lambda" {
 
   type = object({
     zip_filepath          = optional(string)
-    runtime               = optional(string, "nodejs20.x")
+    runtime               = optional(string, "nodejs22.x")
     handler               = optional(string, "index.handler")
     memory_mb             = optional(number, 128)
     timeout_seconds       = optional(number, 25)
@@ -396,7 +396,7 @@ variable "pre_hook_lambda" {
   })
   default = {
     zip_filepath          = null
-    runtime               = "nodejs20.x"
+    runtime               = "nodejs22.x"
     handler               = "index.handler"
     memory_mb             = 128
     timeout_seconds       = 25

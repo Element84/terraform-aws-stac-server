@@ -18,6 +18,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Removed
 
 
+## [2.0.0] - 2025-11-03
+
+### Added
+
+- Updated the stac-server version this module packages from `v3.10.0` to `v4.5.0`
+
+### ⚠️ Breaking
+
+- The minimum version of OpenSearch that [stac-server](https://github.com/stac-utils/stac-server) expects was bumped from 2.17 to 2.19
 
 ## [1.0.2] - 2025-11-03
 

@@ -15,7 +15,7 @@ jobs:
     env:
       CI: true
       # Ensure this matches inputs.tf stac_server_version default value
-      STAC_SERVER_TAG: v3.10.0
+      STAC_SERVER_TAG: v4.5.0
     steps:
       - uses: actions/checkout@v5
 
