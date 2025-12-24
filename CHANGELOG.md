@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+- A new custom_vpce_id var added. If provided, the user is indicating that they have an existing vpc endpoint that the titiler api gateway (and supporting resources) should allow to ingress
+
 ### Changed
 
 - override_main_response_version input var added. Note that this does not actually change your OpenSearch cluster settings, see inputs.tf for details
