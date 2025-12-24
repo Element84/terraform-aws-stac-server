@@ -1,5 +1,8 @@
 locals {
   is_private_endpoint = var.api_rest_type == "PRIVATE" ? true : false
+  // private gateway requires dualstack ip_address_type. for public gateways, ipv4 is the default. future improvement:
+  // allow users to set this when deploying a public gateway
+  gateway_ip_address_type = var.api_rest_type == "PRIVATE" ? "dualstack" : "ipv4"
 }
 
 
@@ -112,6 +115,7 @@ resource "aws_api_gateway_rest_api" "stac_server_api_gateway" {
   endpoint_configuration {
     types            = [var.api_rest_type]
     vpc_endpoint_ids = local.is_private_endpoint ? aws_vpc_endpoint.stac_server_api_gateway_private[*].id : null
+    ip_address_type  = local.gateway_ip_address_type
   }
 }
 
