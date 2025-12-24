@@ -220,6 +220,20 @@ variable "opensearch_ebs_volume_type" {
   default     = "gp3"
 }
 
+variable "override_main_response_version" {
+  description = <<-DESCRIPTION
+  Newer versions of Elasticsearch forcefully set this, even if it's not defined here in which case Terraform will try to
+  revert it on every apply. This value does NOT actually change the setting in OpenSearch cluster. See the GitHub issue
+  linked below. This value is here to appease Terraform only. If Terraform is nagging you with perpetual changes to
+  override main response version, set this var to the value your cluster currently has or alternatively update your
+  cluster settings via AWS API to match the default null value set by this module 
+  https://github.com/hashicorp/terraform-provider-aws/issues/27371
+  https://docs.aws.amazon.com/opensearch-service/latest/APIReference/API_UpgradeDomain.html#opensearchservice-UpgradeDomain-request-AdvancedOptions
+  DESCRIPTION
+  type        = string
+  default     = null
+}
+
 variable "opensearch_host" {
   description = "OpenSearch Host"
   type        = string
