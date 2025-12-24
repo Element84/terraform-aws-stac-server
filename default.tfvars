@@ -97,6 +97,7 @@ pre_hook_lambda = null
 authorized_s3_arns       = []
 private_certificate_arn  = ""
 vpce_private_dns_enabled = false
+custom_vpce_id           = null
 domain_alias             = ""
 stac_api_url             = ""
 # stac_docs_url
