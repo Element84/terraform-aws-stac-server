@@ -67,11 +67,7 @@ resource "aws_opensearch_domain" "stac_server_opensearch_domain" {
 
   advanced_options = {
     "rest.action.multi.allow_explicit_index" = var.allow_explicit_index
-    # newer versions of elasticsearch forcefully set this, even if it is not defined here, in which case TF will try
-    # to revert it on every apply. so we force it to false
-    # https://github.com/hashicorp/terraform-provider-aws/issues/27371
-    # https://docs.aws.amazon.com/opensearch-service/latest/APIReference/API_UpgradeDomain.html#opensearchservice-UpgradeDomain-request-AdvancedOptions
-    "override_main_response_version" = false
+    "override_main_response_version"         = var.opensearch_override_main_response_version
   }
 
   access_policies = <<CONFIG

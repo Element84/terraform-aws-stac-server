@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- override_main_response_version forced to false
+- override_main_response_version input var added. Note that this does not actually change your OpenSearch cluster settings, see inputs.tf for details
 
 ### Fixed
 
