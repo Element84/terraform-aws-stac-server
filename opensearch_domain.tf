@@ -67,7 +67,7 @@ resource "aws_opensearch_domain" "stac_server_opensearch_domain" {
 
   advanced_options = {
     "rest.action.multi.allow_explicit_index" = var.allow_explicit_index
-    "override_main_response_version" = var.opensearch_override_main_response_version
+    "override_main_response_version"         = var.opensearch_override_main_response_version
   }
 
   access_policies = <<CONFIG
