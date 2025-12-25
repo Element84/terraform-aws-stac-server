@@ -441,6 +441,20 @@ variable "vpce_private_dns_enabled" {
   DESCRIPTION
 }
 
+variable "custom_vpce_id" {
+  description = <<-DESCRIPTION
+  If you are managing a VPC Endpoint for API Gateways outside of this module, provide the VPC Endpoint ID here. 
+  This will prevent the module from creating a VPC Endpoint, and will use the provided one instead for
+  configuring access to the private STAC Server API Gateway. If you have multiple API Gateways which need to
+  communicate with VPC resources, they can share a central VPC Endpoint rather than creating one per API Gateway.
+
+  Should be used in conjunction with api_rest_type = "PRIVATE"
+  DESCRIPTION
+
+  type    = string
+  default = null
+}
+
 variable "domain_alias" {
   description = "Custom domain alias for private API Gateway endpoint"
   type        = string
