@@ -9,7 +9,7 @@ This module creates new collections in a new/destination STAC catalog, then quer
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.6.6 |
 | <a name="requirement_archive"></a> [archive](#requirement\_archive) | ~> 2.4 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 5.22 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 6.0 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | ~> 3.2 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | ~> 3.5 |
 
