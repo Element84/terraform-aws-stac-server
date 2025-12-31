@@ -75,8 +75,11 @@ module "main" {
   stac_api_url                              = ""
   # stac_docs_url
   # stac_api_stage_description
-  cors_origin      = "*"
-  cors_credentials = false
-  cors_methods     = ""
-  cors_headers     = ""
+  cors_origin               = "*"
+  cors_credentials          = false
+  cors_methods              = ""
+  cors_headers              = ""
+  asset_proxy_bucket_option = "NONE"
+  asset_proxy_bucket_list   = ""
+  asset_proxy_url_expiry    = 300
 }

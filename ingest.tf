@@ -29,6 +29,9 @@ resource "aws_lambda_function" "stac_server_ingest" {
       POST_INGEST_TOPIC_ARN            = aws_sns_topic.stac_server_post_ingest_sns_topic.arn
       STAC_API_URL                     = var.stac_api_url
       ENABLE_INGEST_ACTION_TRUNCATE    = var.enable_ingest_action_truncate
+      ASSET_PROXY_BUCKET_OPTIONS       = var.asset_proxy_bucket_option
+      ASSET_PROXY_BUCKET_LIST          = var.asset_proxy_bucket_list
+      ASSET_PROXY_URL_EXPIRY           = var.asset_proxy_url_expiry
       },
       var.ingest_lambda.environment_variables
     )

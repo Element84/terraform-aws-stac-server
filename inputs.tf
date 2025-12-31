@@ -550,3 +550,39 @@ variable "stac_server_post_hook_lambda_arn" {
   type        = string
   default     = ""
 }
+
+variable "asset_proxy_bucket_option" {
+  description = <<-DESCRIPTION
+  Control which S3 buckets are proxied through the API. See stac-server utils documentation for details.
+
+  Options: `NONE` (disabled), `ALL` (all S3 assets), `ALL_BUCKETS_IN_ACCOUNT` (all buckets in AWS account), `LIST` (specific buckets only).
+  DESCRIPTION
+
+  type    = string
+  default = "NONE"
+
+  validation {
+    condition     = contains(["NONE", "ALL", "ALL_BUCKETS_IN_ACCOUNT", "LIST"], var.asset_proxy_bucket_option)
+    error_message = "asset_proxy_bucket_option must be one of NONE, ALL, ALL_BUCKETS_IN_ACCOUNT, LIST"
+  }
+}
+
+variable "asset_proxy_bucket_list" {
+  description = <<-DESCRIPTION
+  Comma-separated list of S3 bucket names to proxy. Required when `ASSET_PROXY_BUCKET_OPTION` is `LIST`.
+
+  Example: 'bucket1,bucket2,bucket3'
+  DESCRIPTION
+
+  type    = string
+  default = ""
+}
+
+variable "asset_proxy_url_expiry" {
+  description = <<-DESCRIPTION
+  Pre-signed URL expiry time in seconds for proxied assets.
+  DESCRIPTION
+
+  type    = number
+  default = 300
+}
