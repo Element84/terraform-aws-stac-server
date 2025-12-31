@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - override_main_response_version input var added. Note that this does not actually change your OpenSearch cluster settings, see inputs.tf for details
 
+- Four unused env vars were removed from the ingest lambda: `CORS_CREDENTIALS`, `CORS_HEADERS`, `CORS_METHODS`, `CORS_ORIGIN`
+
 ### Fixed
 
 - Numerous readme and cicd chores
