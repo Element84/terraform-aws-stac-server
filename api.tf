@@ -58,6 +58,9 @@ resource "aws_lambda_function" "stac_server_api" {
       CORS_CREDENTIALS                 = var.cors_credentials
       CORS_METHODS                     = var.cors_methods
       CORS_HEADERS                     = var.cors_headers
+      ASSET_PROXY_BUCKET_OPTIONS       = var.asset_proxy_bucket_option
+      ASSET_PROXY_BUCKET_LIST          = var.asset_proxy_bucket_list
+      ASSET_PROXY_URL_EXPIRY           = var.asset_proxy_url_expiry
       },
       var.api_lambda.environment_variables
     )
