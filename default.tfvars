@@ -97,6 +97,7 @@ pre_hook_lambda = null
 authorized_s3_arns       = []
 private_certificate_arn  = ""
 vpce_private_dns_enabled = false
+custom_vpce_id           = null
 domain_alias             = ""
 stac_api_url             = ""
 # stac_docs_url
@@ -113,3 +114,6 @@ cors_headers     = ""
 # stac_server_pre_hook_lambda_arn
 # stac_server_auth_pre_hook_enabled
 # stac_server_post_hook_lambda_arn
+asset_proxy_bucket_option = "NONE"
+asset_proxy_bucket_list   = ""
+asset_proxy_url_expiry    = 300

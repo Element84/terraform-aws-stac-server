@@ -9,7 +9,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+- A new custom_vpce_id var added. If provided, the user is indicating that they have an existing vpc endpoint that the titiler api gateway (and supporting resources) should allow to ingress
+
 ### Changed
+
+- override_main_response_version input var added. Note that this does not actually change your OpenSearch cluster settings, see inputs.tf for details
+
+- Four unused env vars were removed from the ingest lambda: `CORS_CREDENTIALS`, `CORS_HEADERS`, `CORS_METHODS`, `CORS_ORIGIN`
 
 ### Fixed
 
@@ -17,6 +23,27 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Removed
 
+### ⚠️ Breaking
+
+**AWS Provider Upgrade v5 -> v6**
+
+The Terraform AWS provider was updated from v5 to v6. A few deprecations in the `aws_api_gateway_deployment` resource necessitates the following (see https://registry.terraform.io/providers/hashicorp/aws/latest/docs/guides/version-6-upgrade#resource-aws_api_gateway_deployment). After pulling v2.x of this module:
+
+- Update your `hashicorp/aws` provider to version constraint to "~> 6.0"
+
+- `terraform init -upgrade`
+
+- Run the following, replacing `<module_name>` and `<rest_api_id>`: `terraform import module.<module_name>.aws_api_gateway_stage.stac_server_api_gateway_stage <rest_api_id>/gh`
+
+  - `<module_name>` is the name you've given this module in your root module; if you're not calling this module from another module, remove `module.<module_name>`. `<rest_api_id>` is the `stac_server_api_gateway_id` in outputs.tf
+
+  - You'll see an "Import Successful" notification if your import works as expected
+
+- `terraform apply`
+
+Notes
+
+- Terraform will note that a null_resource.enable_access_logs is being destroyed. This is expected. Previously, access logs were enabled via this null resource; with v2 of this module, they are enabled via the aws_api_gateway_stage resource.
 
 ## [2.0.0] - 2025-11-03
 

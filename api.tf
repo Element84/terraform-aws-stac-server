@@ -1,7 +1,15 @@
 locals {
   is_private_endpoint = var.api_rest_type == "PRIVATE" ? true : false
+  // private gateway requires dualstack ip_address_type. for public gateways, ipv4 is the default. future improvement:
+  // allow users to set this when deploying a public gateway
+  gateway_ip_address_type = var.api_rest_type == "PRIVATE" ? "dualstack" : "ipv4"
+  # if var.custom_vpce_id was provided, the user is indicating they want to use a custom vpc endpoint which they have
+  # defined. if not, and if is_private_endpoint is true, we use the vpce we create in this module
+  vpce_id = var.custom_vpce_id != null ? var.custom_vpce_id : (local.is_private_endpoint ? aws_vpc_endpoint.stac_server_api_gateway_private[0].id : null)
+  # additionally, only create a vpc endpoint in this module if the api gateway is private *and* the user has not
+  # indicated they are using their own vpc endpoint
+  create_vpce = local.is_private_endpoint == true && var.custom_vpce_id == null
 }
-
 
 resource "aws_lambda_function" "stac_server_api" {
   filename         = local.resolved_api_lambda_zip_filepath
@@ -50,6 +58,9 @@ resource "aws_lambda_function" "stac_server_api" {
       CORS_CREDENTIALS                 = var.cors_credentials
       CORS_METHODS                     = var.cors_methods
       CORS_HEADERS                     = var.cors_headers
+      ASSET_PROXY_BUCKET_OPTIONS       = var.asset_proxy_bucket_option
+      ASSET_PROXY_BUCKET_LIST          = var.asset_proxy_bucket_list
+      ASSET_PROXY_URL_EXPIRY           = var.asset_proxy_url_expiry
       },
       var.api_lambda.environment_variables
     )
@@ -87,9 +98,9 @@ resource "aws_vpc_security_group_ingress_rule" "stac_server_api_gateway_private_
 }
 
 resource "aws_vpc_endpoint" "stac_server_api_gateway_private" {
-  count = local.is_private_endpoint ? 1 : 0
+  count = local.create_vpce ? 1 : 0
 
-  service_name        = "com.amazonaws.${data.aws_region.current.name}.execute-api"
+  service_name        = "com.amazonaws.${data.aws_region.current.region}.execute-api"
   vpc_id              = var.vpc_id
   vpc_endpoint_type   = "Interface"
   ip_address_type     = "ipv4"
@@ -111,7 +122,8 @@ resource "aws_api_gateway_rest_api" "stac_server_api_gateway" {
 
   endpoint_configuration {
     types            = [var.api_rest_type]
-    vpc_endpoint_ids = local.is_private_endpoint ? aws_vpc_endpoint.stac_server_api_gateway_private[*].id : null
+    vpc_endpoint_ids = local.is_private_endpoint ? [local.vpce_id] : null
+    ip_address_type  = local.gateway_ip_address_type
   }
 }
 
@@ -122,7 +134,7 @@ data "aws_iam_policy_document" "stac_server_api_gateway_private" {
     sid       = "DenyApiInvokeForNonVpceTraffic"
     effect    = "Deny"
     actions   = ["execute-api:Invoke"]
-    resources = ["arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.stac_server_api_gateway.id}/*"]
+    resources = ["arn:aws:execute-api:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.stac_server_api_gateway.id}/*"]
 
     principals {
       type        = "AWS"
@@ -132,7 +144,7 @@ data "aws_iam_policy_document" "stac_server_api_gateway_private" {
     condition {
       variable = "aws:SourceVpce"
       test     = "StringNotEquals"
-      values   = [aws_vpc_endpoint.stac_server_api_gateway_private[0].id]
+      values   = [local.vpce_id]
     }
   }
 
@@ -140,7 +152,7 @@ data "aws_iam_policy_document" "stac_server_api_gateway_private" {
     sid       = "AllowApiInvoke"
     effect    = "Allow"
     actions   = ["execute-api:Invoke"]
-    resources = ["arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.stac_server_api_gateway.id}/*"]
+    resources = ["arn:aws:execute-api:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.stac_server_api_gateway.id}/*"]
 
     principals {
       type        = "AWS"
@@ -168,7 +180,7 @@ resource "aws_api_gateway_integration" "stac_server_api_gateway_root_method_inte
   resource_id             = aws_api_gateway_rest_api.stac_server_api_gateway.root_resource_id
   http_method             = aws_api_gateway_method.stac_server_api_gateway_root_method.http_method
   type                    = "AWS_PROXY"
-  uri                     = "arn:aws:apigateway:${data.aws_region.current.name}:lambda:path/2015-03-31/functions/${aws_lambda_function.stac_server_api.arn}/invocations"
+  uri                     = "arn:aws:apigateway:${data.aws_region.current.region}:lambda:path/2015-03-31/functions/${aws_lambda_function.stac_server_api.arn}/invocations"
   integration_http_method = "POST"
 }
 
@@ -266,7 +278,7 @@ resource "aws_api_gateway_integration" "stac_server_api_gateway_proxy_resource_m
   resource_id             = aws_api_gateway_resource.stac_server_api_gateway_proxy_resource.id
   http_method             = aws_api_gateway_method.stac_server_api_gateway_proxy_resource_method.http_method
   type                    = "AWS_PROXY"
-  uri                     = "arn:aws:apigateway:${data.aws_region.current.name}:lambda:path/2015-03-31/functions/${aws_lambda_function.stac_server_api.arn}/invocations"
+  uri                     = "arn:aws:apigateway:${data.aws_region.current.region}:lambda:path/2015-03-31/functions/${aws_lambda_function.stac_server_api.arn}/invocations"
   integration_http_method = "POST"
 }
 
@@ -276,42 +288,30 @@ resource "aws_api_gateway_deployment" "stac_server_api_gateway" {
     aws_api_gateway_integration.stac_server_api_gateway_proxy_resource_method_integration,
   ]
 
-  rest_api_id       = aws_api_gateway_rest_api.stac_server_api_gateway.id
-  stage_name        = var.stac_api_stage
-  stage_description = var.stac_api_stage_description
+  rest_api_id = aws_api_gateway_rest_api.stac_server_api_gateway.id
 
   lifecycle {
     create_before_destroy = true
   }
 }
 
+resource "aws_api_gateway_stage" "stac_server_api_gateway_stage" {
+  deployment_id = aws_api_gateway_deployment.stac_server_api_gateway.id
+  rest_api_id   = aws_api_gateway_rest_api.stac_server_api_gateway.id
+  stage_name    = var.stac_api_stage
+  description   = var.stac_api_stage_description
+
+  access_log_settings {
+    destination_arn = aws_cloudwatch_log_group.stac_server_api_gateway_logs_group.arn
+
+    # terraform's jsonencode() sorts keys lexicographically, which would modify the log format. so, we build a string
+    # https://github.com/hashicorp/terraform/issues/27880
+    format = "{requestId:$context.requestId,ip:$context.identity.sourceIp,caller:$context.identity.caller,user:$context.identity.user,requestTime:$context.requestTime,httpMethod:$context.httpMethod,resourcePath:$context.resourcePath,status:$context.status,protocol:$context.protocol,responseLength:$context.responseLength}"
+  }
+}
+
 resource "aws_cloudwatch_log_group" "stac_server_api_gateway_logs_group" {
-  name = "/aws/apigateway/${local.name_prefix}-stac-server-${aws_api_gateway_deployment.stac_server_api_gateway.rest_api_id}/${aws_api_gateway_deployment.stac_server_api_gateway.stage_name}"
-}
-
-locals {
-  access_log_format = "{\"requestId\":\"\\$context.requestId\",\"ip\":\"\\$context.identity.sourceIp\",\"caller\":\"\\$context.identity.caller\",\"user\":\"\\$context.identity.user\",\"requestTime\":\"\\$context.requestTime\",\"httpMethod\":\"\\$context.httpMethod\",\"resourcePath\":\"\\$context.resourcePath\",\"status\":\"\\$context.status\",\"protocol\":\"\\$context.protocol\",\"responseLength\":\"\\$context.responseLength\"}"
-}
-
-resource "null_resource" "enable_access_logs" {
-  triggers = {
-    stage_name              = aws_api_gateway_deployment.stac_server_api_gateway.stage_name
-    rest_api_id             = aws_api_gateway_deployment.stac_server_api_gateway.rest_api_id
-    apigw_access_logs_group = aws_cloudwatch_log_group.stac_server_api_gateway_logs_group.arn
-    access_log_format       = local.access_log_format
-  }
-
-  provisioner "local-exec" {
-    interpreter = ["bash", "-ec"]
-    command     = <<EOF
-export AWS_DEFAULT_REGION=${data.aws_region.current.name}
-export AWS_REGION=${data.aws_region.current.name}
-
-echo "Update Access Logging on FilmDrop Stac Server API."
-aws apigateway update-stage --rest-api-id ${aws_api_gateway_deployment.stac_server_api_gateway.rest_api_id} --stage-name ${aws_api_gateway_deployment.stac_server_api_gateway.stage_name} --patch-operations "[{\"op\": \"replace\",\"path\": \"/accessLogSettings/destinationArn\",\"value\": \"${aws_cloudwatch_log_group.stac_server_api_gateway_logs_group.arn}\"},{\"op\": \"replace\",\"path\": \"/accessLogSettings/format\",\"value\": \"${local.access_log_format}\"}]"
-
-EOF
-  }
+  name = "/aws/apigateway/${local.name_prefix}-stac-server-${aws_api_gateway_deployment.stac_server_api_gateway.rest_api_id}/${var.stac_api_stage}"
 }
 
 resource "aws_lambda_permission" "stac_server_api_gateway_lambda_permission_root_resource" {
@@ -320,7 +320,7 @@ resource "aws_lambda_permission" "stac_server_api_gateway_lambda_permission_root
   function_name = aws_lambda_function.stac_server_api.arn
   principal     = "apigateway.amazonaws.com"
 
-  source_arn = "arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.stac_server_api_gateway.id}/*/*"
+  source_arn = "arn:aws:execute-api:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.stac_server_api_gateway.id}/*/*"
 }
 
 resource "aws_lambda_permission" "stac_server_api_gateway_lambda_permission_proxy_resource" {
@@ -329,7 +329,7 @@ resource "aws_lambda_permission" "stac_server_api_gateway_lambda_permission_prox
   function_name = aws_lambda_function.stac_server_api.arn
   principal     = "apigateway.amazonaws.com"
 
-  source_arn = "arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.stac_server_api_gateway.id}/*/*${aws_api_gateway_resource.stac_server_api_gateway_proxy_resource.path}"
+  source_arn = "arn:aws:execute-api:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.stac_server_api_gateway.id}/*/*${aws_api_gateway_resource.stac_server_api_gateway_proxy_resource.path}"
 }
 
 resource "aws_api_gateway_domain_name" "stac_server_api_gateway_domain_name" {
@@ -349,16 +349,16 @@ resource "aws_api_gateway_domain_name" "stac_server_api_gateway_domain_name" {
       "Effect": "Allow",
       "Principal": "*",
       "Action": "execute-api:Invoke",
-      "Resource": "arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:/domainnames/*"
+      "Resource": "arn:aws:execute-api:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:/domainnames/*"
     },
     {
       "Effect": "Deny",
       "Principal": "*",
       "Action": "execute-api:Invoke",
-      "Resource": "arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:/domainnames/*",
+      "Resource": "arn:aws:execute-api:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:/domainnames/*",
       "Condition": {
         "StringNotEquals": {
-          "aws:SourceVpce": "${aws_vpc_endpoint.stac_server_api_gateway_private[0].id}"
+          "aws:SourceVpce": "${local.vpce_id}"
         }
       }
     }
@@ -369,7 +369,7 @@ EOF
 
 resource "aws_api_gateway_domain_name_access_association" "titiler_api_gateway_domain_name_access_association" {
   count                          = local.is_private_endpoint == true && var.domain_alias != "" && var.private_certificate_arn != "" ? 1 : 0
-  access_association_source      = aws_vpc_endpoint.stac_server_api_gateway_private[0].id
+  access_association_source      = local.vpce_id
   access_association_source_type = "VPCE"
   domain_name_arn                = aws_api_gateway_domain_name.stac_server_api_gateway_domain_name[0].arn
 }
@@ -379,5 +379,5 @@ resource "aws_api_gateway_base_path_mapping" "stac_server_api_gateway_domain_map
   domain_name    = aws_api_gateway_domain_name.stac_server_api_gateway_domain_name[0].domain_name
   domain_name_id = aws_api_gateway_domain_name.stac_server_api_gateway_domain_name[0].domain_name_id
   api_id         = aws_api_gateway_rest_api.stac_server_api_gateway.id
-  stage_name     = aws_api_gateway_deployment.stac_server_api_gateway.stage_name
+  stage_name     = var.stac_api_stage
 }

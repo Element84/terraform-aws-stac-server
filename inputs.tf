@@ -220,6 +220,20 @@ variable "opensearch_ebs_volume_type" {
   default     = "gp3"
 }
 
+variable "opensearch_override_main_response_version" {
+  description = <<-DESCRIPTION
+  Newer versions of Elasticsearch forcefully set this, even if it's not defined here in which case Terraform will try to
+  revert it on every apply. This value does NOT actually change the setting in OpenSearch cluster. See the GitHub issue
+  linked below. This value is here to appease Terraform only. If Terraform is nagging you with perpetual changes to
+  override main response version, set this var to the value your cluster currently has or alternatively update your
+  cluster settings via AWS API to match the default null value set by this module 
+  https://github.com/hashicorp/terraform-provider-aws/issues/27371
+  https://docs.aws.amazon.com/opensearch-service/latest/APIReference/API_UpgradeDomain.html#opensearchservice-UpgradeDomain-request-AdvancedOptions
+  DESCRIPTION
+  type        = string
+  default     = null
+}
+
 variable "opensearch_host" {
   description = "OpenSearch Host"
   type        = string
@@ -427,6 +441,20 @@ variable "vpce_private_dns_enabled" {
   DESCRIPTION
 }
 
+variable "custom_vpce_id" {
+  description = <<-DESCRIPTION
+  If you are managing a VPC Endpoint for API Gateways outside of this module, provide the VPC Endpoint ID here. 
+  This will prevent the module from creating a VPC Endpoint, and will use the provided one instead for
+  configuring access to the private STAC Server API Gateway. If you have multiple API Gateways which need to
+  communicate with VPC resources, they can share a central VPC Endpoint rather than creating one per API Gateway.
+
+  Should be used in conjunction with api_rest_type = "PRIVATE"
+  DESCRIPTION
+
+  type    = string
+  default = null
+}
+
 variable "domain_alias" {
   description = "Custom domain alias for private API Gateway endpoint"
   type        = string
@@ -521,4 +549,40 @@ variable "stac_server_post_hook_lambda_arn" {
   description = "STAC API Post-Hook Lambda ARN"
   type        = string
   default     = ""
+}
+
+variable "asset_proxy_bucket_option" {
+  description = <<-DESCRIPTION
+  Control which S3 buckets are proxied through the API. See stac-server utils documentation for details.
+
+  Options: `NONE` (disabled), `ALL` (all S3 assets), `ALL_BUCKETS_IN_ACCOUNT` (all buckets in AWS account), `LIST` (specific buckets only).
+  DESCRIPTION
+
+  type    = string
+  default = "NONE"
+
+  validation {
+    condition     = contains(["NONE", "ALL", "ALL_BUCKETS_IN_ACCOUNT", "LIST"], var.asset_proxy_bucket_option)
+    error_message = "asset_proxy_bucket_option must be one of NONE, ALL, ALL_BUCKETS_IN_ACCOUNT, LIST"
+  }
+}
+
+variable "asset_proxy_bucket_list" {
+  description = <<-DESCRIPTION
+  Comma-separated list of S3 bucket names to proxy. Required when `ASSET_PROXY_BUCKET_OPTION` is `LIST`.
+
+  Example: 'bucket1,bucket2,bucket3'
+  DESCRIPTION
+
+  type    = string
+  default = ""
+}
+
+variable "asset_proxy_url_expiry" {
+  description = <<-DESCRIPTION
+  Pre-signed URL expiry time in seconds for proxied assets.
+  DESCRIPTION
+
+  type    = number
+  default = 300
 }
