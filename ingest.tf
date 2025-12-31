@@ -28,10 +28,6 @@ resource "aws_lambda_function" "stac_server_ingest" {
       COLLECTION_TO_INDEX_MAPPINGS     = var.collection_to_index_mappings
       POST_INGEST_TOPIC_ARN            = aws_sns_topic.stac_server_post_ingest_sns_topic.arn
       STAC_API_URL                     = var.stac_api_url
-      CORS_ORIGIN                      = var.cors_origin
-      CORS_CREDENTIALS                 = var.cors_credentials
-      CORS_METHODS                     = var.cors_methods
-      CORS_HEADERS                     = var.cors_headers
       ENABLE_INGEST_ACTION_TRUNCATE    = var.enable_ingest_action_truncate
       },
       var.ingest_lambda.environment_variables
