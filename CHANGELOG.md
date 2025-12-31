@@ -45,15 +45,11 @@ Notes
 
 - Terraform will note that a null_resource.enable_access_logs is being destroyed. This is expected. Previously, access logs were enabled via this null resource; with v2 of this module, they are enabled via the aws_api_gateway_stage resource.
 
-## [2.0.0] - 2025-11-03
+**Updated the stac-server version this module packages `v3.10.0` -> `v4.5.0`**
 
-### Added
+- The minimum version of OpenSearch that [stac-server](https://github.com/stac-utils/stac-server) expects was bumped from 2.17 to 2.19. Accordingly, projects should update `opensearch_version` to `OpenSearch_2.19` at a minimum.
 
-- Updated the stac-server version this module packages from `v3.10.0` to `v4.5.0`
 
-### ⚠️ Breaking
-
-- The minimum version of OpenSearch that [stac-server](https://github.com/stac-utils/stac-server) expects was bumped from 2.17 to 2.19. While this may or may not be technically breaking, the docs aren't entirely clear, stac-server pre-release tests run on 2.19. To be on the conservative side, here we assume it's required
 
 ## [1.0.2] - 2025-11-03
 

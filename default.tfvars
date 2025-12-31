@@ -27,7 +27,7 @@ enable_ingest_action_truncate = false
 # log_level
 items_max_limit                             = 100
 collection_to_index_mappings                = ""
-opensearch_version                          = "OpenSearch_2.17"
+opensearch_version                          = "OpenSearch_2.19"
 opensearch_cluster_instance_type            = "t3.small.search"
 opensearch_cluster_instance_count           = 3
 opensearch_cluster_dedicated_master_enabled = true
