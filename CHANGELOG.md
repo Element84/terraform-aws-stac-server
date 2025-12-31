@@ -47,7 +47,9 @@ Notes
 
 **Updated the stac-server version this module packages `v3.10.0` -> `v4.5.0`**
 
-- The minimum version of OpenSearch that [stac-server](https://github.com/stac-utils/stac-server) expects was bumped from 2.17 to 2.19. Accordingly, projects should update `opensearch_version` to `OpenSearch_2.19` at a minimum.
+- The minimum version of OpenSearch that [stac-server](https://github.com/stac-utils/stac-server) v4.5.0 expects is 2.19 (v3.10.0 expected 2.17). Accordingly, projects should update `opensearch_version` to `OpenSearch_2.19` at a minimum.
+
+- Lambda runtimes should be bumped nodejs20 -> nodejs22
 
 
 
