@@ -27,7 +27,7 @@ enable_ingest_action_truncate = false
 # log_level
 items_max_limit                             = 100
 collection_to_index_mappings                = ""
-opensearch_version                          = "OpenSearch_2.17"
+opensearch_version                          = "OpenSearch_2.19"
 opensearch_cluster_instance_type            = "t3.small.search"
 opensearch_cluster_instance_count           = 3
 opensearch_cluster_dedicated_master_enabled = true
@@ -57,7 +57,7 @@ api_lambda = null
 # example custom usage
 # api_lambda = {
 #   zip_filepath = "artifacts/stac-server/stac-server-v4.4.0-api-lambda-dist.zip"
-#   runtime               = "nodejs20.x"
+#   runtime               = "nodejs22.x"
 #   handler               = "index.handler"
 #   memory_mb             = 1024
 #   timeout_seconds       = 30
@@ -71,7 +71,7 @@ ingest_lambda = null
 # example custom usage
 # ingest_lambda = {
 #   zip_filepath = "artifacts/stac-server/stac-server-v4.4.0-ingest-lambda-dist.zip"
-#   runtime               = "nodejs20.x"
+#   runtime               = "nodejs22.x"
 #   handler               = "index.handler"
 #   memory_mb             = 1024
 #   timeout_seconds       = 30
@@ -85,7 +85,7 @@ pre_hook_lambda = null
 # example custom usage
 # pre_hook_lambda = {
 #   zip_filepath = "artifacts/stac-server/stac-server-v4.4.0-pre-hook-lambda-dist.zip"
-#   runtime               = "nodejs20.x"
+#   runtime               = "nodejs22.x"
 #   handler               = "index.handler"
 #   memory_mb             = 1024
 #   timeout_seconds       = 30

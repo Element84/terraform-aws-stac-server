@@ -34,7 +34,7 @@ variable "stac_server_version" {
   DESCRIPTION
 
   type    = string
-  default = "v3.10.0"
+  default = "v4.5.0"
 }
 
 variable "stac_api_stage" {
@@ -151,7 +151,7 @@ variable "collection_to_index_mappings" {
 variable "opensearch_version" {
   description = "OpenSearch version for OpenSearch Domain"
   type        = string
-  default     = "OpenSearch_2.17"
+  default     = "OpenSearch_2.19"
 }
 
 variable "opensearch_cluster_instance_type" {
@@ -334,7 +334,7 @@ variable "api_lambda" {
 
   type = object({
     zip_filepath          = optional(string)
-    runtime               = optional(string, "nodejs20.x")
+    runtime               = optional(string, "nodejs22.x")
     handler               = optional(string, "index.handler")
     memory_mb             = optional(number, 1024)
     timeout_seconds       = optional(number, 30)
@@ -342,7 +342,7 @@ variable "api_lambda" {
   })
   default = {
     zip_filepath          = null
-    runtime               = "nodejs20.x"
+    runtime               = "nodejs22.x"
     handler               = "index.handler"
     memory_mb             = 1024
     timeout_seconds       = 30
@@ -368,7 +368,7 @@ variable "ingest_lambda" {
 
   type = object({
     zip_filepath          = optional(string)
-    runtime               = optional(string, "nodejs20.x")
+    runtime               = optional(string, "nodejs22.x")
     handler               = optional(string, "index.handler")
     memory_mb             = optional(number, 512)
     timeout_seconds       = optional(number, 60)
@@ -376,7 +376,7 @@ variable "ingest_lambda" {
   })
   default = {
     zip_filepath          = null
-    runtime               = "nodejs20.x"
+    runtime               = "nodejs22.x"
     handler               = "index.handler"
     memory_mb             = 512
     timeout_seconds       = 60
@@ -402,7 +402,7 @@ variable "pre_hook_lambda" {
 
   type = object({
     zip_filepath          = optional(string)
-    runtime               = optional(string, "nodejs20.x")
+    runtime               = optional(string, "nodejs22.x")
     handler               = optional(string, "index.handler")
     memory_mb             = optional(number, 128)
     timeout_seconds       = optional(number, 25)
@@ -410,7 +410,7 @@ variable "pre_hook_lambda" {
   })
   default = {
     zip_filepath          = null
-    runtime               = "nodejs20.x"
+    runtime               = "nodejs22.x"
     handler               = "index.handler"
     memory_mb             = 128
     timeout_seconds       = 25
