@@ -9,10 +9,6 @@ locals {
   # additionally, only create a vpc endpoint in this module if the api gateway is private *and* the user has not
   # indicated they are using their own vpc endpoint
   create_vpce = local.is_private_endpoint == true && var.custom_vpce_id == null
-
-  # terraform's jsonencode() sorts keys lexicographically, which would modify the log format. so, we build a string
-  # https://github.com/hashicorp/terraform/issues/27880
-  access_log_format = "{requestId:$context.requestId,ip:$context.identity.sourceIp,caller:$context.identity.caller,user:$context.identity.user,requestTime:$context.requestTime,httpMethod:$context.httpMethod,resourcePath:$context.resourcePath,status:$context.status,protocol:$context.protocol,responseLength:$context.responseLength}"
 }
 
 resource "aws_lambda_function" "stac_server_api" {
@@ -304,7 +300,10 @@ resource "aws_api_gateway_stage" "stac_server_api_gateway_stage" {
 
   access_log_settings {
     destination_arn = aws_cloudwatch_log_group.stac_server_api_gateway_logs_group.arn
-    format          = local.access_log_format
+
+    # terraform's jsonencode() sorts keys lexicographically, which would modify the log format. so, we build a string
+    # https://github.com/hashicorp/terraform/issues/27880
+    format = "{requestId:$context.requestId,ip:$context.identity.sourceIp,caller:$context.identity.caller,user:$context.identity.user,requestTime:$context.requestTime,httpMethod:$context.httpMethod,resourcePath:$context.resourcePath,status:$context.status,protocol:$context.protocol,responseLength:$context.responseLength}"
   }
 }
 
