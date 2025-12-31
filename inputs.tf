@@ -570,6 +570,8 @@ variable "asset_proxy_bucket_option" {
 variable "asset_proxy_bucket_list" {
   description = <<-DESCRIPTION
   Comma-separated list of S3 bucket names to proxy. Required when `ASSET_PROXY_BUCKET_OPTION` is `LIST`.
+
+  Example: 'bucket1,bucket2,bucket3'
   DESCRIPTION
 
   type    = string
