@@ -9,19 +9,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- A new custom_vpce_id var added. If provided, the user is indicating that they have an existing vpc endpoint that the titiler api gateway (and supporting resources) should allow to ingress
-
 ### Changed
-
-- override_main_response_version input var added. Note that this does not actually change your OpenSearch cluster settings, see inputs.tf for details
-
-- Four unused env vars were removed from the ingest lambda: `CORS_CREDENTIALS`, `CORS_HEADERS`, `CORS_METHODS`, `CORS_ORIGIN`
 
 ### Fixed
 
-- Numerous readme and cicd chores
-
 ### Removed
+
+
+
+## [2.0.0] - 2026-01-03
 
 ### ⚠️ Breaking
 
@@ -51,7 +47,19 @@ Notes
 
 - Lambda runtimes should be bumped nodejs20 -> nodejs22
 
+### Added
 
+- A new custom_vpce_id var added. If provided, the user is indicating that they have an existing vpc endpoint that the titiler api gateway (and supporting resources) should allow to ingress
+
+### Changed
+
+- override_main_response_version input var added. Note that this does not actually change your OpenSearch cluster settings, see inputs.tf for details
+
+- Four unused env vars were removed from the ingest lambda: `CORS_CREDENTIALS`, `CORS_HEADERS`, `CORS_METHODS`, `CORS_ORIGIN`
+
+### Fixed
+
+- Numerous readme and cicd chores
 
 ## [1.0.2] - 2025-11-03
 
