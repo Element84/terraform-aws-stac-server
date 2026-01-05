@@ -7,6 +7,11 @@ on:
   # Allows manual testing
   workflow_dispatch:
 
+# avoid concurrent runs of this workflow, to prevent aws resource conflicts if multiple merges to main and/or tags
+# occur in quick succession
+concurrency:
+  group: ${{ github.workflow }}
+
 jobs:
   pre-commit:
     permissions:
