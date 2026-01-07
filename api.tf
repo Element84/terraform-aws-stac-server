@@ -286,6 +286,12 @@ resource "aws_api_gateway_deployment" "stac_server_api_gateway" {
   depends_on = [
     aws_api_gateway_integration.stac_server_api_gateway_root_method_integration,
     aws_api_gateway_integration.stac_server_api_gateway_proxy_resource_method_integration,
+    aws_api_gateway_method_response.stac_root_options_200,
+    aws_api_gateway_method_response.stac_options_200,
+    aws_api_gateway_integration.stac_root_options_integration,
+    aws_api_gateway_integration.stac_options_integration,
+    aws_api_gateway_integration_response.stac_root_options_integration_response,
+    aws_api_gateway_integration_response.stac_options_integration_response,
   ]
 
   rest_api_id = aws_api_gateway_rest_api.stac_server_api_gateway.id
@@ -379,5 +385,5 @@ resource "aws_api_gateway_base_path_mapping" "stac_server_api_gateway_domain_map
   domain_name    = aws_api_gateway_domain_name.stac_server_api_gateway_domain_name[0].domain_name
   domain_name_id = aws_api_gateway_domain_name.stac_server_api_gateway_domain_name[0].domain_name_id
   api_id         = aws_api_gateway_rest_api.stac_server_api_gateway.id
-  stage_name     = var.stac_api_stage
+  stage_name     = aws_api_gateway_stage.stac_server_api_gateway_stage.stage_name
 }

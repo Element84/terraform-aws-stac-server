@@ -6,7 +6,8 @@ We would love for you to contribute! Follow the steps below to get started, and 
 
 **Prerequisites**
 
-- An AWS account with an existing VPC, that contains at least one private subnet
+- A VPC in an AWS account which contains at least one private subnet
+- In the AWS region you're deploying to, in API Gateway a [CloudWatch log role ARN](https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-logging.html#set-up-access-logging-permissions) set
 
 **Setup**
 
