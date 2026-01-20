@@ -5,6 +5,7 @@ stac_title                               = "STAC API"
 stac_description                         = "A STAC API using stac-server"
 stac_server_version                      = null
 stac_api_stage                           = "git"
+stac_api_provisioned_concurrency         = 0
 stac_api_rootpath                        = "git"
 deploy_local_stac_server_artifacts       = false
 deploy_stac_server_opensearch_serverless = true

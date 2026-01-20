@@ -76,6 +76,14 @@ resource "aws_lambda_function" "stac_server_api" {
   }
 }
 
+resource "aws_lambda_provisioned_concurrency_config" "stac_server_api_provisioned_concurrency" {
+  count = var.stac_api_provisioned_concurrency
+  
+  function_name = aws_lambda_function.stac_server_api.function_name
+  provisioned_concurrent_executions = var.stac_api_provisioned_concurrency
+  qualifier = aws_lambda_function.stac_server_api.version
+}
+
 resource "aws_security_group" "stac_server_api_gateway_private_vpce" {
   count = local.is_private_endpoint ? 1 : 0
 
