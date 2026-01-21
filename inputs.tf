@@ -43,6 +43,12 @@ variable "stac_api_stage" {
   default     = "dev"
 }
 
+variable "stac_api_provisioned_concurrency" {
+  description = "Number of lambda instances to concurrently provision if desired for faster api response time and no cold start delay"
+  type        = number
+  default     = 0
+}
+
 variable "stac_api_rootpath" {
   description = <<-DESCRIPTION
   If stac-server has a cloudfront distribution, this should be an empty string.

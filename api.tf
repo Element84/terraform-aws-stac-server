@@ -21,6 +21,7 @@ resource "aws_lambda_function" "stac_server_api" {
   runtime          = var.api_lambda.runtime
   timeout          = var.api_lambda.timeout_seconds
   memory_size      = var.api_lambda.memory_mb
+  publish          = true
 
   environment {
     variables = merge({
@@ -74,6 +75,14 @@ resource "aws_lambda_function" "stac_server_api" {
       security_group_ids = var.vpc_security_group_ids
     }
   }
+}
+
+resource "aws_lambda_provisioned_concurrency_config" "stac_server_api_provisioned_concurrency" {
+  count = var.stac_api_provisioned_concurrency > 0 ? 1 : 0
+
+  function_name                     = aws_lambda_function.stac_server_api.function_name
+  provisioned_concurrent_executions = var.stac_api_provisioned_concurrency
+  qualifier                         = aws_lambda_function.stac_server_api.version
 }
 
 resource "aws_security_group" "stac_server_api_gateway_private_vpce" {

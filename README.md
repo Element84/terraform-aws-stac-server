@@ -114,6 +114,7 @@ No modules.
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Project Name | `string` | n/a | yes |
 | <a name="input_request_logging_enabled"></a> [request\_logging\_enabled](#input\_request\_logging\_enabled) | Log all requests to the server | `bool` | `true` | no |
 | <a name="input_reserved_concurrent_executions"></a> [reserved\_concurrent\_executions](#input\_reserved\_concurrent\_executions) | STAC ingest lambda reserved concurrent executions (max concurrency) | `number` | `10` | no |
+| <a name="input_stac_api_provisioned_concurrency"></a> [stac\_api\_provisioned\_concurrency](#input\_stac\_api\_provisioned\_concurrency) | Number of lambda instances to concurrently provision if desired for faster api response time and no cold start delay | `number` | `0` | no |
 | <a name="input_stac_api_rootpath"></a> [stac\_api\_rootpath](#input\_stac\_api\_rootpath) | If stac-server has a cloudfront distribution, this should be an empty string.<br/>If stac-server does not have a cloudfront distribution, the api\_rest\_type is<br/>PRIVATE, and you're managing a custom API Gateway domain outside of this module,<br/>this should be an empty string.<br/>If neither is true, the stac\_api\_stage var should be used. | `string` | `""` | no |
 | <a name="input_stac_api_stage"></a> [stac\_api\_stage](#input\_stac\_api\_stage) | STAC API stage | `string` | `"dev"` | no |
 | <a name="input_stac_api_stage_description"></a> [stac\_api\_stage\_description](#input\_stac\_api\_stage\_description) | STAC API stage description | `string` | `""` | no |
