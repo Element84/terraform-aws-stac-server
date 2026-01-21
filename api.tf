@@ -21,6 +21,7 @@ resource "aws_lambda_function" "stac_server_api" {
   runtime          = var.api_lambda.runtime
   timeout          = var.api_lambda.timeout_seconds
   memory_size      = var.api_lambda.memory_mb
+  publish          = true
 
   environment {
     variables = merge({
