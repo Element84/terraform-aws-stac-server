@@ -9,14 +9,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Add capability to optionally use provisioned concurrency for the api lambda to avoid cold start issues.   Quantity can be set as input variable [48](https://github.com/Element84/terraform-aws-stac-server/pull/48)
-
 ### Changed
 
 ### Fixed
 
 ### Removed
 
+
+
+## [2.0.1] - 2026-01-21
+
+### Added
+
+- Add capability to optionally use provisioned concurrency for the api lambda to avoid cold start issues.   Quantity can be set as input variable [48](https://github.com/Element84/terraform-aws-stac-server/pull/48)
 
 
 ## [2.0.0] - 2026-01-03
