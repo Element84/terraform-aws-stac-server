@@ -38,18 +38,20 @@ module "main" {
   enable_ingest_action_truncate = false
   # request_logging_enabled
   # log_level
-  items_max_limit                             = 100
-  collection_to_index_mappings                = ""
-  opensearch_version                          = "OpenSearch_2.19"
-  opensearch_cluster_instance_type            = "t3.small.search"
-  opensearch_cluster_instance_count           = 3
+  items_max_limit              = 100
+  collection_to_index_mappings = ""
+  opensearch_version           = "OpenSearch_2.19"
+
+  opensearch_cluster_instance_type           = "t3.small.search"
+  opensearch_cluster_instance_count          = 3
+  opensearch_cluster_availability_zone_count = 3
+  opensearch_cluster_zone_awareness_enabled  = true
+
   opensearch_cluster_dedicated_master_enabled = true
   opensearch_cluster_dedicated_master_type    = "t3.small.search"
   opensearch_cluster_dedicated_master_count   = 3
-  opensearch_cluster_availability_zone_count  = 3
-  opensearch_cluster_zone_awareness_enabled   = true
-  opensearch_ebs_volume_size                  = 35
-  # opensearch_ebs_volume_size
+
+  opensearch_ebs_volume_size = 35
   # opensearch_domain_enforce_https
   # opensearch_domain_min_tls
   # opensearch_ebs_volume_type
