@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Lambda runtimes for the `user_init` and `historical_ingest` updated from python v3.9, which is beyond deprecation, to v3.10
 
+- Enable OpenSearch logs via an optional input
+
 ### Added
 
 ### Changed
