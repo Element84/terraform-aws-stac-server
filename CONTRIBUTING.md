@@ -6,7 +6,7 @@ We would love for you to contribute! Follow the steps below to get started, and 
 
 **Prerequisites**
 
-- An AWS account with an existing VPC, that contains at least one private subnet
+- A VPC in an AWS account which contains at least one private subnet
 
 **Setup**
 

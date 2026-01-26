@@ -19,7 +19,9 @@ A default version of stac-server is packaged with this module. See the default v
 
 ## General Usage
 
-While this module is most commonly used in conjunction with a FilmDrop deployment, it can be deployed as a standalone STAC server. As a prerequisite, a VPC in an AWS account which contains at least one private subnet will be needed.
+While this module is most commonly used in conjunction with a FilmDrop deployment, it can be deployed as a standalone STAC server. Prerequisites:
+
+- A VPC in an AWS account which contains at least one private subnet
 
 **Quickstart**
 
