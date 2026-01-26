@@ -22,7 +22,6 @@ A default version of stac-server is packaged with this module. See the default v
 While this module is most commonly used in conjunction with a FilmDrop deployment, it can be deployed as a standalone STAC server. Prerequisites:
 
 - A VPC in an AWS account which contains at least one private subnet
-- In the AWS region you're deploying to, in API Gateway a [CloudWatch log role ARN](https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-logging.html#set-up-access-logging-permissions) set
 
 **Quickstart**
 
