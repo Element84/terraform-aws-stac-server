@@ -4,7 +4,7 @@ resource "aws_lambda_function" "historical_ingest" {
   description   = "Historical Ingest Lambda"
   role          = var.stac_server_lambda_iam_role_arn
   handler       = "main.lambda_handler"
-  runtime       = "python3.9"
+  runtime       = "python3.10"
   timeout       = 900
   memory_size   = 1536
 
