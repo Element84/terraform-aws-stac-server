@@ -259,7 +259,7 @@ resource "aws_lambda_function" "stac_server_opensearch_user_initializer" {
   role             = aws_iam_role.stac_api_lambda_role.arn
   description      = "Lambda function to initialize OpenSearch users, roles, and settings."
   handler          = "main.lambda_handler"
-  runtime          = "python3.9"
+  runtime          = "python3.10"
   memory_size      = "512"
   timeout          = "900"
 
