@@ -632,3 +632,48 @@ variable "asset_proxy_url_expiry" {
   type    = number
   default = 300
 }
+
+variable "opensearch_logs" {
+  description = <<-EOT
+    Configuration for OpenSearch log publishing to CloudWatch.
+    This entire variable is optional. If not provided, no logs will be published.
+    
+    NOTE: This variable only applies to the managed (provisioned) OpenSearch service. 
+    It is NOT supported when `deploy_stac_server_opensearch_serverless` is set to `true`.
+
+    You can configure any combination of the following log types (all are optional):
+    - `ES_APPLICATION_LOGS`: OpenSearch application logs (error, warn, info).
+    - `INDEX_SLOW_LOGS`: Logs for slow indexing operations.
+    - `SEARCH_SLOW_LOGS`: Logs for slow search queries.
+    - `AUDIT_LOGS`: Logs for access and security audits. Tracks user activity and access to the domain.
+      Warning: Audit logs can be extremely verbose and may result in significant CloudWatch Log ingestion and storage costs.
+  EOT
+  type = object({
+    ES_APPLICATION_LOGS = optional(object({
+      enabled                     = bool
+      retention_in_days           = number
+      deletion_protection_enabled = optional(bool, false)
+    }))
+    INDEX_SLOW_LOGS = optional(object({
+      enabled                     = bool
+      retention_in_days           = number
+      deletion_protection_enabled = optional(bool, false)
+    }))
+    SEARCH_SLOW_LOGS = optional(object({
+      enabled                     = bool
+      retention_in_days           = number
+      deletion_protection_enabled = optional(bool, false)
+    }))
+    AUDIT_LOGS = optional(object({
+      enabled                     = bool
+      retention_in_days           = number
+      deletion_protection_enabled = bool # required property; audit logs are usually very important
+    }))
+  })
+  default = {}
+
+  validation {
+    condition     = var.deploy_stac_server_opensearch_serverless ? alltrue([for k, v in var.opensearch_logs : v == null]) : true
+    error_message = "The `opensearch_logs` variable is not supported when `deploy_stac_server_opensearch_serverless` is true."
+  }
+}
