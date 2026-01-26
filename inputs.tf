@@ -161,15 +161,67 @@ variable "opensearch_version" {
 }
 
 variable "opensearch_cluster_instance_type" {
-  description = "OpenSearch Domain instance type"
+  description = <<-DESCRIPTION
+  OpenSearch Domain instance type. 
+  Examples: 
+  - t3.small.search (entry level, development)
+  - m6g.large.search (general purpose)
+  - or2.medium.search (opensearch optimized)
+  
+  See AWS documentation for full list of supported instance types per region and engine version.
+  DESCRIPTION
   type        = string
   default     = "c6g.large.search"
 }
 
 variable "opensearch_cluster_instance_count" {
-  description = "OpenSearch Domain instance count"
+  description = <<-DESCRIPTION
+  The number of data nodes to provision in the OpenSearch cluster.
+  
+  Constraints:
+  - If zone_awareness_enabled is false: Allowed values are integer >= 1.
+  - If zone_awareness_enabled is true and availability_zone_count is 2: Must be an even number >= 2.
+  - If zone_awareness_enabled is true and availability_zone_count is 3: Must be a multiple of 3 >= 3.
+  DESCRIPTION
   type        = number
   default     = 3
+}
+
+variable "opensearch_cluster_zone_awareness_enabled" {
+  description = <<-DESCRIPTION
+  Enable Zone Awareness to distribute instances across multiple Availability Zones.
+  
+  Configuration Rules:
+  - If true: 
+    - You must set opensearch_cluster_instance_count >= 2.
+    - You must provided enough subnets in vpc_subnet_ids (at least availability_zone_count).
+  - If false: 
+    - You can set opensearch_cluster_instance_count to 1 or more.
+    - All instances will be placed in the first subnet provided in vpc_subnet_ids.
+  DESCRIPTION
+  type        = bool
+  default     = true
+  validation {
+    condition     = var.opensearch_cluster_instance_count == 1 ? !var.opensearch_cluster_zone_awareness_enabled : true
+    error_message = "If instance count is 1, zone awareness must be disabled."
+  }
+}
+
+variable "opensearch_cluster_availability_zone_count" {
+  description = <<-DESCRIPTION
+  The number of Availability Zones to deploy the OpenSearch cluster across.
+  
+  Constraints:
+  - Valid values are 2 or 3.
+  - Only used and enforced when opensearch_cluster_zone_awareness_enabled is true.
+  - You must provide at least this many subnets in vpc_subnet_ids.
+  DESCRIPTION
+  type        = number
+  default     = 3
+  validation {
+    condition     = var.opensearch_cluster_zone_awareness_enabled ? contains([2, 3], var.opensearch_cluster_availability_zone_count) : true
+    error_message = "If zone awareness is enabled, availability zone count must be 2 or 3."
+  }
 }
 
 variable "opensearch_cluster_dedicated_master_enabled" {
@@ -188,18 +240,6 @@ variable "opensearch_cluster_dedicated_master_count" {
   description = "Number of dedicated main nodes in the cluster."
   type        = number
   default     = 3
-}
-
-variable "opensearch_cluster_availability_zone_count" {
-  description = "OpenSearch Domain availability zone count"
-  type        = number
-  default     = 3
-}
-
-variable "opensearch_cluster_zone_awareness_enabled" {
-  description = "OpenSearch Domain zone awareness"
-  type        = bool
-  default     = true
 }
 
 variable "opensearch_ebs_volume_size" {

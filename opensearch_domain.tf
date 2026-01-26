@@ -1,3 +1,15 @@
+locals {
+  # The OpenSearch Service requires a specific number of subnets based on the cluster configuration:
+  #   1. Zone Awareness Disabled (Instance Count = 1): Requires exactly 1 subnet.
+  #   2. Zone Awareness Enabled (2 AZs): Requires exactly 2 subnets.
+  #   3. Zone Awareness Enabled (3 AZs): Requires exactly 3 subnets.
+  #
+  # This local ensures we pass the exact number of subnets required by slicing the provided list.
+  # If zone awareness is disabled, we take only the first subnet.
+  # If zone awareness is enabled, we take the first N subnets, where N is the availability_zone_count.
+  opensearch_subnet_ids = slice(var.vpc_subnet_ids, 0, var.opensearch_cluster_zone_awareness_enabled ? var.opensearch_cluster_availability_zone_count : 1)
+}
+
 resource "random_id" "suffix" {
   byte_length = 8
 }
@@ -15,8 +27,11 @@ resource "aws_opensearch_domain" "stac_server_opensearch_domain" {
     dedicated_master_count   = var.opensearch_cluster_dedicated_master_count
     zone_awareness_enabled   = var.opensearch_cluster_zone_awareness_enabled
 
-    zone_awareness_config {
-      availability_zone_count = var.opensearch_cluster_availability_zone_count
+    dynamic "zone_awareness_config" {
+      for_each = var.opensearch_cluster_zone_awareness_enabled ? [1] : []
+      content {
+        availability_zone_count = var.opensearch_cluster_availability_zone_count
+      }
     }
   }
 
@@ -57,10 +72,10 @@ resource "aws_opensearch_domain" "stac_server_opensearch_domain" {
   }
 
   dynamic "vpc_options" {
-    for_each = { for i, j in [var.deploy_stac_server_outside_vpc] : i => j if var.deploy_stac_server_outside_vpc != true }
+    for_each = var.deploy_stac_server_outside_vpc ? [] : [1]
 
     content {
-      subnet_ids         = var.vpc_subnet_ids
+      subnet_ids         = local.opensearch_subnet_ids
       security_group_ids = [aws_security_group.opensearch_security_group[0].id]
     }
   }
