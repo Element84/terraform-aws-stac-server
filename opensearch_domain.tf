@@ -14,6 +14,37 @@ resource "random_id" "suffix" {
   byte_length = 8
 }
 
+resource "aws_cloudwatch_log_group" "opensearch_logs" {
+  for_each = { for k, v in var.opensearch_logs : k => v if v != null && v.enabled }
+
+  name              = "/aws/opensearch/${local.name_prefix}-stac-server/${each.key}"
+  retention_in_days = each.value.retention_in_days
+  skip_destroy      = each.value.deletion_protection_enabled
+}
+
+resource "aws_cloudwatch_log_resource_policy" "opensearch_logs_policy" {
+  count       = length([for k, v in var.opensearch_logs : k if v != null && v.enabled]) > 0 ? 1 : 0
+  policy_name = "${local.name_prefix}-stac-server-opensearch-logs-policy"
+
+  policy_document = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "es.amazonaws.com"
+        }
+        Action = [
+          "logs:PutLogEvents",
+          "logs:PutLogEventsBatch",
+          "logs:CreateLogStream"
+        ]
+        Resource = "arn:aws:logs:*"
+      }
+    ]
+  })
+}
+
 resource "aws_opensearch_domain" "stac_server_opensearch_domain" {
   count          = var.deploy_stac_server_opensearch_serverless ? 0 : 1
   domain_name    = lower(var.opensearch_stac_server_domain_name_override == null ? "${local.name_prefix}-stac-server" : var.opensearch_stac_server_domain_name_override)
@@ -52,6 +83,16 @@ resource "aws_opensearch_domain" "stac_server_opensearch_domain" {
 
   node_to_node_encryption {
     enabled = true
+  }
+
+  dynamic "log_publishing_options" {
+    for_each = aws_cloudwatch_log_group.opensearch_logs
+
+    content {
+      log_type                 = log_publishing_options.key
+      cloudwatch_log_group_arn = log_publishing_options.value.arn
+      enabled                  = true
+    }
   }
 
   dynamic "advanced_security_options" {
