@@ -15,6 +15,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Removed
 
+## [2.0.3] - 2026-01-27
+
+### Fixed
+
+- Correctly point API Gateway to the published lambda version so that features like provisioned concurrency work as expected, and trigger deployment of the gateway when any changes to dependencies occur
 
 ## [2.0.2] - 2026-01-26
 
