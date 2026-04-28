@@ -230,6 +230,9 @@ resource "aws_api_gateway_integration" "stac_root_options_integration" {
   resource_id = aws_api_gateway_rest_api.stac_server_api_gateway.root_resource_id
   http_method = aws_api_gateway_method.stac_root_options_method.http_method
   type        = "MOCK"
+  request_templates = {
+    "application/json" = "{\"statusCode\": 200}"
+  }
 }
 
 resource "aws_api_gateway_integration_response" "stac_root_options_integration_response" {
@@ -268,6 +271,9 @@ resource "aws_api_gateway_integration" "stac_options_integration" {
   resource_id = aws_api_gateway_resource.stac_server_api_gateway_proxy_resource.id
   http_method = aws_api_gateway_method.stac_options_method.http_method
   type        = "MOCK"
+  request_templates = {
+    "application/json" = "{\"statusCode\": 200}"
+  }
 }
 
 resource "aws_api_gateway_integration_response" "stac_options_integration_response" {
