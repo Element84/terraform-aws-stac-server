@@ -40,7 +40,7 @@ cd "$STAC_SERVER_DIR"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 # install the version of node specified in .nvmrc, and ensure we are using it
 nvm install && nvm use
-npm install
+npm ci
 BUILD_PRE_HOOK=true npm run build
 cd ..
 
