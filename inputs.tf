@@ -26,15 +26,17 @@ variable "stac_description" {
 
 variable "stac_server_version" {
   description = <<-DESCRIPTION
-  stac-server version to deploy, e.g. "v5.0.0". The lambda dist ZIP for this version is downloaded
-  from the [stac-server release](https://github.com/stac-utils/stac-server/releases) of the same tag
-  unless stac_server_zip_filepath is set. Versions prior to v5.0.0 do not include a lambda dist ZIP
-  release asset and require stac_server_zip_filepath. Note that versions of stac-server are not
-  guaranteed to be compatible with this module.
+  (Optional) stac-server version to deploy, e.g. "v5.0.0". Defaults to "v5.0.0", the version this
+  module release is tested against. The lambda dist ZIP for this version is downloaded from the
+  [stac-server release](https://github.com/stac-utils/stac-server/releases) of the same tag, unless
+  stac_server_zip_filepath is set. Releases prior to v5.0.0 do not include a lambda dist ZIP asset
+  and require stac_server_zip_filepath. Not all stac-server versions are compatible with this module;
+  versions other than the default have not been tested.
   DESCRIPTION
 
   type     = string
   nullable = false
+  default  = "v5.0.0"
 
   validation {
     condition     = can(regex("^v\\d+\\.\\d+\\.\\d+", var.stac_server_version))
@@ -44,15 +46,16 @@ variable "stac_server_version" {
 
 variable "stac_server_zip_filepath" {
   description = <<-DESCRIPTION
-  (optional) Filepath to a stac-server lambda dist ZIP, relative to the root module of this
+  (Optional) Filepath to a stac-server lambda dist ZIP, relative to the root module of this
   deployment. If set, this ZIP is used instead of downloading the release asset for
   stac_server_version. Use this for local stac-server builds (`npm run build-lambda-dist`) or for
   stac-server versions without a lambda dist ZIP release asset. The ZIP must contain all stac-server
   lambda entrypoints (api/index.js, ingest/index.js, pre-hook/index.js).
   DESCRIPTION
 
-  type    = string
-  default = null
+  type     = string
+  nullable = true
+  default  = null
 }
 
 variable "stac_api_stage" {
