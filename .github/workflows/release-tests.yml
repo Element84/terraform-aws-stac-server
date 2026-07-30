@@ -26,8 +26,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI: true
-      # Ensure this matches inputs.tf stac_server_version default value
-      STAC_SERVER_TAG: v4.5.0
+      # Authenticates the GitHub API request that resolves the stac-server lambda dist asset URL
+      GITHUB_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v5
 
@@ -55,10 +55,6 @@ jobs:
           sed -i "s|VAR-TF_STATE_BUCKET|${{ secrets.FD_CICD_TF_STATE_BUCKET }}|g" backend.tf
           sed -i "s|VAR-AWS_REGION|${{ secrets.FD_CICD_AWS_REGION}}|g" backend.tf
           sed -i "s|VAR-TF_STATE_FILENAME|$TF_STATE_FILENAME|g" backend.tf
-
-      - name: Update stac-server lambdas
-        id: update_stac_lambdas
-        run: ./utils/update-lambdas.bash
 
       - name: Configure Terraform Init Credentials
         id: init_creds

@@ -16,11 +16,10 @@ module "main" {
   stac_id                                  = "stac-server"
   stac_title                               = "STAC API"
   stac_description                         = "A STAC API using stac-server"
-  stac_server_version                      = null
+  stac_server_version                      = "v5.0.0"
   stac_api_stage                           = "gh"
   stac_api_rootpath                        = "gh"
   stac_api_provisioned_concurrency         = 2
-  deploy_local_stac_server_artifacts       = false
   deploy_stac_server_opensearch_serverless = true
   deploy_stac_server_outside_vpc           = false
 

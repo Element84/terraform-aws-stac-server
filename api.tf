@@ -12,12 +12,12 @@ locals {
 }
 
 resource "aws_lambda_function" "stac_server_api" {
-  filename         = local.resolved_api_lambda_zip_filepath
+  filename         = local.stac_server_dist_zip_filepath
   function_name    = "${local.name_prefix}-stac-server-api"
   description      = "stac-server API Lambda"
   role             = aws_iam_role.stac_api_lambda_role.arn
   handler          = var.api_lambda.handler
-  source_code_hash = filebase64sha256(local.resolved_api_lambda_zip_filepath)
+  source_code_hash = local.stac_server_dist_zip_hash
   runtime          = var.api_lambda.runtime
   timeout          = var.api_lambda.timeout_seconds
   memory_size      = var.api_lambda.memory_mb
@@ -75,6 +75,10 @@ resource "aws_lambda_function" "stac_server_api" {
       security_group_ids = var.vpc_security_group_ids
     }
   }
+
+  depends_on = [
+    null_resource.get_stac_server_lambda_dist
+  ]
 }
 
 resource "aws_lambda_provisioned_concurrency_config" "stac_server_api_provisioned_concurrency" {

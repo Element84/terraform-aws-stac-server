@@ -47,15 +47,13 @@ terraform fmt --recursive
 
 **Optional Setup**
 
-- nvm
-  - Needed if updating the default, built-in stac-server version
 - terraform-docs
   - Installing pre-commit enables you to `pre-commit run terraform-docs-go --all-files` to update documentation. For a little more control, directly install terraform-docs and use `terraform-docs .` at the root of this repo. For parity with our CICD tests, install the version of terraform-docs denoted in .pre-commit-config.yaml
 
-## Updating the Default, Built-In stac-server Version
+## stac-server Version Support
 
-We package a specific stac-server version with each release of this repository. To change this packaged version:
+stac-server is not packaged with this repository. The `stac_server_version` variable selects the version to deploy, and its release lambda dist ZIP is downloaded at apply time (see `utils/fetch-lambda-dist.bash`). When changing the version this module is tested against, update `stac_server_version` in `default.tfvars` and `utils/cicd/main.tf`, and note the change in CHANGELOG.md.
 
-1. Build stac-server and get its lambdas: `./utils/update-lambdas.bash v3.10.0`
+## Updating the historical-ingest Lambda
 
-2. *Important* -- follow the steps in `.github/pull_request_template.md` to note and propagate the change to appropriate files
+The historical-ingest module's `lambda.zip` is built from Python source in this repository and is committed. After changing `modules/historical-ingest/lambda/`, rebuild it with `./utils/build-historical-ingest.bash` and commit the result.

@@ -26,15 +26,33 @@ variable "stac_description" {
 
 variable "stac_server_version" {
   description = <<-DESCRIPTION
-  stac-server version. Leave this null to use the default, prepackaged version of stac-server.
-
-  If you need to use a custom version, set this variable to the desired version string *and* set
-  deploy_local_stac_server_artifacts = true. Note though that custom versions of stac-server are not
+  stac-server version to deploy, e.g. "v5.0.0". The lambda dist ZIP for this version is downloaded
+  from the [stac-server release](https://github.com/stac-utils/stac-server/releases) of the same tag
+  unless stac_server_zip_filepath is set. Versions prior to v5.0.0 do not include a lambda dist ZIP
+  release asset and require stac_server_zip_filepath. Note that versions of stac-server are not
   guaranteed to be compatible with this module.
   DESCRIPTION
 
+  type     = string
+  nullable = false
+
+  validation {
+    condition     = can(regex("^v\\d+\\.\\d+\\.\\d+", var.stac_server_version))
+    error_message = "stac_server_version must be a tag of the form vX.Y.Z, e.g. v5.0.0."
+  }
+}
+
+variable "stac_server_zip_filepath" {
+  description = <<-DESCRIPTION
+  (optional) Filepath to a stac-server lambda dist ZIP, relative to the root module of this
+  deployment. If set, this ZIP is used instead of downloading the release asset for
+  stac_server_version. Use this for local stac-server builds (`npm run build-lambda-dist`) or for
+  stac-server versions without a lambda dist ZIP release asset. The ZIP must contain all stac-server
+  lambda entrypoints (api/index.js, ingest/index.js, pre-hook/index.js).
+  DESCRIPTION
+
   type    = string
-  default = "v4.5.0"
+  default = null
 }
 
 variable "stac_api_stage" {
@@ -59,13 +77,6 @@ variable "stac_api_rootpath" {
   DESCRIPTION
   type        = string
   default     = ""
-}
-
-variable "deploy_local_stac_server_artifacts" {
-  description = "Deploy STAC Server artifacts for local deploy"
-  type        = bool
-  default     = false
-  nullable    = false
 }
 
 variable "deploy_stac_server_opensearch_serverless" {
@@ -366,9 +377,6 @@ variable "private_api_additional_security_group_ids" {
 variable "api_lambda" {
   description = <<-DESCRIPTION
   (optional, object) Parameters for the stac-server API Lambda function.
-    - zip_filepath: (optional, string) Filepath to a ZIP that implements the
-      stac-server API Lambda. Path is relative to the root module of this
-      deployment. Overrides the default ZIP included with this module.
     - runtime: (optional, string) Lambda runtime.
     - handler: (optional, string) Lambda handler.
     - memory_mb: (optional, number) Lambda max memory (MB).
@@ -379,17 +387,15 @@ variable "api_lambda" {
   DESCRIPTION
 
   type = object({
-    zip_filepath          = optional(string)
     runtime               = optional(string, "nodejs22.x")
-    handler               = optional(string, "index.handler")
+    handler               = optional(string, "api/index.handler")
     memory_mb             = optional(number, 1024)
     timeout_seconds       = optional(number, 30)
     environment_variables = optional(map(string), {})
   })
   default = {
-    zip_filepath          = null
     runtime               = "nodejs22.x"
-    handler               = "index.handler"
+    handler               = "api/index.handler"
     memory_mb             = 1024
     timeout_seconds       = 30
     environment_variables = {}
@@ -400,9 +406,6 @@ variable "api_lambda" {
 variable "ingest_lambda" {
   description = <<-DESCRIPTION
   (optional, object) Parameters for the stac-server ingest Lambda function.
-    - zip_filepath: (optional, string) Filepath to a ZIP that implements the
-      stac-server ingest Lambda. Path is relative to the root module of this
-      deployment. Overrides the default ZIP included with this module.
     - runtime: (optional, string) Lambda runtime.
     - handler: (optional, string) Lambda handler.
     - memory_mb: (optional, number) Lambda max memory (MB).
@@ -413,17 +416,15 @@ variable "ingest_lambda" {
   DESCRIPTION
 
   type = object({
-    zip_filepath          = optional(string)
     runtime               = optional(string, "nodejs22.x")
-    handler               = optional(string, "index.handler")
+    handler               = optional(string, "ingest/index.handler")
     memory_mb             = optional(number, 512)
     timeout_seconds       = optional(number, 60)
     environment_variables = optional(map(string), {})
   })
   default = {
-    zip_filepath          = null
     runtime               = "nodejs22.x"
-    handler               = "index.handler"
+    handler               = "ingest/index.handler"
     memory_mb             = 512
     timeout_seconds       = 60
     environment_variables = {}
@@ -434,9 +435,6 @@ variable "ingest_lambda" {
 variable "pre_hook_lambda" {
   description = <<-DESCRIPTION
   (optional, object) Parameters for the stac-server pre-hook Lambda function.
-    - zip_filepath: (optional, string) Filepath to a ZIP that implements the
-      stac-server auth pre-hook Lambda. Path is relative to the root module of
-      this deployment. Overrides the default ZIP included with this module.
     - runtime: (optional, string) Lambda runtime.
     - handler: (optional, string) Lambda handler.
     - memory_mb: (optional, number) Lambda max memory (MB).
@@ -447,17 +445,15 @@ variable "pre_hook_lambda" {
   DESCRIPTION
 
   type = object({
-    zip_filepath          = optional(string)
     runtime               = optional(string, "nodejs22.x")
-    handler               = optional(string, "index.handler")
+    handler               = optional(string, "pre-hook/index.handler")
     memory_mb             = optional(number, 128)
     timeout_seconds       = optional(number, 25)
     environment_variables = optional(map(string), {})
   })
   default = {
-    zip_filepath          = null
     runtime               = "nodejs22.x"
-    handler               = "index.handler"
+    handler               = "pre-hook/index.handler"
     memory_mb             = 128
     timeout_seconds       = 25
     environment_variables = {}
