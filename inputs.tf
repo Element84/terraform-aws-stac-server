@@ -26,12 +26,12 @@ variable "stac_description" {
 
 variable "stac_server_version" {
   description = <<-DESCRIPTION
-  (Optional) stac-server version to deploy, e.g. "v5.0.0". Defaults to "v5.0.0", the version this module release is tested against. The lambda dist ZIP for this version is downloaded from the [stac-server release](https://github.com/stac-utils/stac-server/releases) of the same tag, unless stac_server_zip_filepath is set. Releases prior to v5.0.0 do not include a lambda dist ZIP asset and require stac_server_zip_filepath. Not all stac-server versions are compatible with this module; versions other than the default have not been tested.
+  (Optional) stac-server version to deploy, as a release tag of the form "vX.Y.Z". The default is the version this module release is tested against. The lambda dist ZIP for this version is downloaded from the [stac-server release](https://github.com/stac-utils/stac-server/releases) of the same tag, unless stac_server_zip_filepath is set. Releases prior to v5.0.0 do not include a lambda dist ZIP asset and require stac_server_zip_filepath. Not all stac-server versions are compatible with this module; versions other than the default have not been tested.
   DESCRIPTION
 
   type     = string
   nullable = false
-  default  = "v5.0.0"
+  default  = "v5.0.2"
 
   validation {
     condition     = can(regex("^v\\d+\\.\\d+\\.\\d+", var.stac_server_version))

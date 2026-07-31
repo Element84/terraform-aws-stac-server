@@ -12,11 +12,11 @@ module "main" {
   source = "../.."
 
   # project
-  project_name                             = "cicd"
-  stac_id                                  = "stac-server"
-  stac_title                               = "STAC API"
-  stac_description                         = "A STAC API using stac-server"
-  stac_server_version                      = "v5.0.0"
+  project_name        = "cicd"
+  stac_id             = "stac-server"
+  stac_title          = "STAC API"
+  stac_description    = "A STAC API using stac-server"
+  stac_server_version = "v5.0.2"
   # stac_server_zip_filepath
   stac_api_stage                           = "gh"
   stac_api_rootpath                        = "gh"
