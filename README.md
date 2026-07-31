@@ -46,7 +46,7 @@ While this module is most commonly used in conjunction with a FilmDrop deploymen
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.13.0 |
 | <a name="requirement_archive"></a> [archive](#requirement\_archive) | ~> 2.4 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 6.0 |
@@ -60,7 +60,7 @@ No modules.
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_additional_ingest_sqs_senders_arns"></a> [additional\_ingest\_sqs\_senders\_arns](#input\_additional\_ingest\_sqs\_senders\_arns) | List of additional principals to grant access to send to the Ingest SQS. This is required to allow STAC API SNS notifications (e.g. earth search's ingest SNS topic) to be able to publish SQS ingest messages to our stac-server for indexing. | `list(string)` | `[]` | no |
 | <a name="input_allow_explicit_index"></a> [allow\_explicit\_index](#input\_allow\_explicit\_index) | Allow OpenSearch Explicit Index | `string` | `"true"` | no |
 | <a name="input_api_lambda"></a> [api\_lambda](#input\_api\_lambda) | (optional, object) Parameters for the stac-server API Lambda function.<br/>  - runtime: (optional, string) Lambda runtime.<br/>  - handler: (optional, string) Lambda handler.<br/>  - memory\_mb: (optional, number) Lambda max memory (MB).<br/>  - timeout\_seconds (optional, number) Lambda timeout (seconds).<br/>  - environment\_variables: (optional, map(string)) Custom environment variables to add to the Lambda. These will be merged with the default environment variables. Custom variables with the same key will override defaults. | <pre>object({<br/>    runtime               = optional(string, "nodejs22.x")<br/>    handler               = optional(string, "api/index.handler")<br/>    memory_mb             = optional(number, 1024)<br/>    timeout_seconds       = optional(number, 30)<br/>    environment_variables = optional(map(string), {})<br/>  })</pre> | <pre>{<br/>  "environment_variables": {},<br/>  "handler": "api/index.handler",<br/>  "memory_mb": 1024,<br/>  "runtime": "nodejs22.x",<br/>  "timeout_seconds": 30<br/>}</pre> | no |
@@ -129,7 +129,7 @@ No modules.
 | <a name="input_stac_server_auth_pre_hook_enabled"></a> [stac\_server\_auth\_pre\_hook\_enabled](#input\_stac\_server\_auth\_pre\_hook\_enabled) | STAC API Pre-Hook Auth Lambda Enabled | `bool` | `false` | no |
 | <a name="input_stac_server_post_hook_lambda_arn"></a> [stac\_server\_post\_hook\_lambda\_arn](#input\_stac\_server\_post\_hook\_lambda\_arn) | STAC API Post-Hook Lambda ARN | `string` | `""` | no |
 | <a name="input_stac_server_pre_hook_lambda_arn"></a> [stac\_server\_pre\_hook\_lambda\_arn](#input\_stac\_server\_pre\_hook\_lambda\_arn) | STAC API Pre-Hook Lambda ARN | `string` | `""` | no |
-| <a name="input_stac_server_version"></a> [stac\_server\_version](#input\_stac\_server\_version) | (Optional) stac-server version to deploy, e.g. "v5.0.0". Defaults to "v5.0.0", the version this module release is tested against. The lambda dist ZIP for this version is downloaded from the [stac-server release](https://github.com/stac-utils/stac-server/releases) of the same tag, unless stac\_server\_zip\_filepath is set. Releases prior to v5.0.0 do not include a lambda dist ZIP asset and require stac\_server\_zip\_filepath. Not all stac-server versions are compatible with this module; versions other than the default have not been tested. | `string` | `"v5.0.0"` | no |
+| <a name="input_stac_server_version"></a> [stac\_server\_version](#input\_stac\_server\_version) | (Optional) stac-server version to deploy, as a release tag of the form "vX.Y.Z". The default is the version this module release is tested against. The lambda dist ZIP for this version is downloaded from the [stac-server release](https://github.com/stac-utils/stac-server/releases) of the same tag, unless stac\_server\_zip\_filepath is set. Releases prior to v5.0.0 do not include a lambda dist ZIP asset and require stac\_server\_zip\_filepath. Not all stac-server versions are compatible with this module; versions other than the default have not been tested. | `string` | `"v5.0.2"` | no |
 | <a name="input_stac_server_zip_filepath"></a> [stac\_server\_zip\_filepath](#input\_stac\_server\_zip\_filepath) | (Optional) Filepath to a stac-server lambda dist ZIP, relative to the root module of this deployment. If set, this ZIP is used instead of downloading the release asset for stac\_server\_version. Use this for local stac-server builds (`npm run build-lambda-dist`) or for stac-server versions without a lambda dist ZIP release asset. The ZIP must contain all stac-server lambda entrypoints (api/index.js, ingest/index.js, pre-hook/index.js). | `string` | `null` | no |
 | <a name="input_stac_title"></a> [stac\_title](#input\_stac\_title) | STAC title | `string` | `"STAC API"` | no |
 | <a name="input_vpc_cidr_range"></a> [vpc\_cidr\_range](#input\_vpc\_cidr\_range) | CIDR Range for FilmDrop vpc | `string` | n/a | yes |
@@ -141,7 +141,7 @@ No modules.
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_stac_server_api_domain_name"></a> [stac\_server\_api\_domain\_name](#output\_stac\_server\_api\_domain\_name) | n/a |
 | <a name="output_stac_server_api_gateway_id"></a> [stac\_server\_api\_gateway\_id](#output\_stac\_server\_api\_gateway\_id) | n/a |
 | <a name="output_stac_server_api_lambda_arn"></a> [stac\_server\_api\_lambda\_arn](#output\_stac\_server\_api\_lambda\_arn) | n/a |
