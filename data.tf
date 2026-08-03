@@ -43,16 +43,16 @@ locals {
   # lambdas. A user-provided filepath is expected to be relative to the root module. When
   # downloading, the version is included in the filename so a version change forces a lambda update.
   stac_server_dist_zip_filepath = (
-    var.stac_server_zip_filepath != null
-    ? "${path.root}/${var.stac_server_zip_filepath}"
+    var.stac_server_lambda_zip_filepath != null
+    ? "${path.root}/${var.stac_server_lambda_zip_filepath}"
     : "${path.root}/stac-server-lambda-dist-${var.stac_server_version}.zip"
   )
 
   # A user-provided ZIP is hashed so content changes force a lambda update. A downloaded ZIP does
   # not exist at plan time and cannot be hashed; the version-derived filename is the update trigger.
   stac_server_dist_zip_hash = (
-    var.stac_server_zip_filepath != null
-    ? filebase64sha256("${path.root}/${var.stac_server_zip_filepath}")
+    var.stac_server_lambda_zip_filepath != null
+    ? filebase64sha256("${path.root}/${var.stac_server_lambda_zip_filepath}")
     : null
   )
 }
@@ -60,7 +60,7 @@ locals {
 # Download the stac-server lambda dist ZIP from the GitHub release matching stac_server_version,
 # unless a local ZIP was provided. Re-download when the version changes.
 resource "null_resource" "get_stac_server_lambda_dist" {
-  count = var.stac_server_zip_filepath == null ? 1 : 0
+  count = var.stac_server_lambda_zip_filepath == null ? 1 : 0
 
   triggers = {
     stac_server_version = var.stac_server_version

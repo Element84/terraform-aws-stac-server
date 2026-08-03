@@ -37,7 +37,7 @@ asset_url=$(
 if [ -z "$asset_url" ]; then
     echo "ERROR: no lambda dist ZIP asset found on stac-server release ${version}."
     echo "Releases prior to v5.0.0 do not include this asset. Build a ZIP locally"
-    echo "(npm run build-lambda-dist) and set stac_server_zip_filepath instead."
+    echo "(npm run build-lambda-dist) and set stac_server_lambda_zip_filepath instead."
     exit 1
 fi
 

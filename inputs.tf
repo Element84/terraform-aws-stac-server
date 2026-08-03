@@ -26,7 +26,7 @@ variable "stac_description" {
 
 variable "stac_server_version" {
   description = <<-DESCRIPTION
-  (Optional) stac-server version to deploy, as a release tag of the form "vX.Y.Z". The default is the version this module release is tested against. The lambda dist ZIP for this version is downloaded from the [stac-server release](https://github.com/stac-utils/stac-server/releases) of the same tag, unless stac_server_zip_filepath is set. Releases prior to v5.0.0 do not include a lambda dist ZIP asset and require stac_server_zip_filepath. Not all stac-server versions are compatible with this module; versions other than the default have not been tested.
+  (Optional) stac-server version to deploy, as a release tag of the form "vX.Y.Z". The default is the version this module release is tested against. The lambda dist ZIP for this version is downloaded from the [stac-server release](https://github.com/stac-utils/stac-server/releases) of the same tag, unless stac_server_lambda_zip_filepath is set. Releases prior to v5.0.0 do not include a lambda dist ZIP asset and require stac_server_lambda_zip_filepath. Not all stac-server versions are compatible with this module; versions other than the default have not been tested.
   DESCRIPTION
 
   type     = string
@@ -39,7 +39,7 @@ variable "stac_server_version" {
   }
 }
 
-variable "stac_server_zip_filepath" {
+variable "stac_server_lambda_zip_filepath" {
   description = <<-DESCRIPTION
   (Optional) Filepath to a stac-server lambda dist ZIP, relative to the root module of this deployment. If set, this ZIP is used instead of downloading the release asset for stac_server_version. Use this for local stac-server builds (`npm run build-lambda-dist`) or for stac-server versions without a lambda dist ZIP release asset. The ZIP must contain all stac-server lambda entrypoints (api/index.js, ingest/index.js, pre-hook/index.js).
   DESCRIPTION

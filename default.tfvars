@@ -11,7 +11,7 @@ deploy_stac_server_opensearch_serverless = true
 deploy_stac_server_outside_vpc           = false
 
 # use a local lambda dist ZIP instead of downloading the release asset
-# stac_server_zip_filepath = "artifacts/stac-server-lambda-dist.zip"
+# stac_server_lambda_zip_filepath = "artifacts/stac-server-lambda-dist.zip"
 
 # NOTE: edit these VPC values with your AWS environment, the values below are placeholders
 # vpc

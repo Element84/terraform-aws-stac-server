@@ -17,7 +17,7 @@ module "main" {
   stac_title          = "STAC API"
   stac_description    = "A STAC API using stac-server"
   stac_server_version = "v5.0.2"
-  # stac_server_zip_filepath
+  # stac_server_lambda_zip_filepath
   stac_api_stage                           = "gh"
   stac_api_rootpath                        = "gh"
   stac_api_provisioned_concurrency         = 2
