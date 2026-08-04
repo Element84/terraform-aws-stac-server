@@ -39,6 +39,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+- `utils/build-historical-ingest.bash` cross-builds the historical-ingest `lambda.zip` for the Lambda platform, so an archive built on macOS no longer ships host binaries that fail at import in Lambda, and rejects an archive whose compiled extensions are not linux/x86_64
+- The historical-ingest lambda sets `source_code_hash`, so a rebuilt `lambda.zip` updates the deployed function instead of leaving stale code in place
+- `utils/fetch-lambda-dist.bash` reports why fetching a lambda dist ZIP failed, distinguishing a missing release from a rate limit, instead of exiting with a bare curl status
+
 ### Removed
 
 - `deploy_local_stac_server_artifacts` variable and the apply-time lambda build it triggered
