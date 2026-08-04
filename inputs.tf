@@ -55,6 +55,16 @@ variable "stac_api_stage" {
   default     = "dev"
 }
 
+variable "resource_name_suffix" {
+  description = <<-DESCRIPTION
+  (Optional) Suffix used with `fd-<project_name>-` to name all resources. Defaults to `stac_api_stage`. Set it so resource names — e.g. the OpenSearch domain, which is destroyed and recreated on rename — do not change when the API stage does.
+  DESCRIPTION
+
+  type     = string
+  nullable = true
+  default  = null
+}
+
 variable "stac_api_provisioned_concurrency" {
   description = "Number of lambda instances to concurrently provision if desired for faster api response time and no cold start delay"
   type        = number
