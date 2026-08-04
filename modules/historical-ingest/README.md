@@ -2,6 +2,16 @@
 
 This module creates new collections in a new/destination STAC catalog, then queries for data and siphons it from a source STAC catalog, queueing it for ingest into the destination STAC catalog (by way of the SQS ingest queue).
 
+## Building the Lambda ZIP
+
+Unlike the other Lambdas in this repository, this module's deployment package is not assembled by Terraform. `lambda.tf` reads `lambda.zip` as a file that must already exist, so the archive is committed and rebuilt by hand after any change to `lambda/`:
+
+```bash
+./utils/build-historical-ingest.bash
+```
+
+The script cross-builds for the Lambda's platform regardless of the build host, so it can be run on macOS directly, and it rejects the archive if any compiled dependency came out wrong.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
