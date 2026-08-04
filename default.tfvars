@@ -3,13 +3,15 @@ project_name                             = "ssrv-cicd"
 stac_id                                  = "stac-server"
 stac_title                               = "STAC API"
 stac_description                         = "A STAC API using stac-server"
-stac_server_version                      = null
+stac_server_version                      = "v5.0.2"
 stac_api_stage                           = "git"
 stac_api_provisioned_concurrency         = 0
 stac_api_rootpath                        = "git"
-deploy_local_stac_server_artifacts       = false
 deploy_stac_server_opensearch_serverless = true
 deploy_stac_server_outside_vpc           = false
+
+# use a local lambda dist ZIP instead of downloading the release asset
+# stac_server_lambda_zip_filepath = "artifacts/stac-server-lambda-dist.zip"
 
 # NOTE: edit these VPC values with your AWS environment, the values below are placeholders
 # vpc
@@ -57,9 +59,8 @@ private_api_additional_security_group_ids = null
 api_lambda = null
 # example custom usage
 # api_lambda = {
-#   zip_filepath = "artifacts/stac-server/stac-server-v4.4.0-api-lambda-dist.zip"
 #   runtime               = "nodejs22.x"
-#   handler               = "index.handler"
+#   handler               = "api/index.handler"
 #   memory_mb             = 1024
 #   timeout_seconds       = 30
 #   environment_variables = {
@@ -71,9 +72,8 @@ api_lambda = null
 ingest_lambda = null
 # example custom usage
 # ingest_lambda = {
-#   zip_filepath = "artifacts/stac-server/stac-server-v4.4.0-ingest-lambda-dist.zip"
 #   runtime               = "nodejs22.x"
-#   handler               = "index.handler"
+#   handler               = "ingest/index.handler"
 #   memory_mb             = 1024
 #   timeout_seconds       = 30
 #   environment_variables = {
@@ -85,9 +85,8 @@ ingest_lambda = null
 pre_hook_lambda = null
 # example custom usage
 # pre_hook_lambda = {
-#   zip_filepath = "artifacts/stac-server/stac-server-v4.4.0-pre-hook-lambda-dist.zip"
 #   runtime               = "nodejs22.x"
-#   handler               = "index.handler"
+#   handler               = "pre-hook/index.handler"
 #   memory_mb             = 1024
 #   timeout_seconds       = 30
 #   environment_variables = {

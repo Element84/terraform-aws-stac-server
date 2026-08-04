@@ -6,7 +6,7 @@ This module subscribes an SQS ingest queue to an SNS topic that broadcasts new d
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.6.6 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 6.0 |
 
@@ -17,7 +17,7 @@ No modules.
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_destination_collections_list"></a> [destination\_collections\_list](#input\_destination\_collections\_list) | The (comma-separated) list of collections to ingest | `string` | n/a | yes |
 | <a name="input_destination_collections_max_lat"></a> [destination\_collections\_max\_lat](#input\_destination\_collections\_max\_lat) | The maximum latitude of the bounding box area | `number` | n/a | yes |
 | <a name="input_destination_collections_max_long"></a> [destination\_collections\_max\_long](#input\_destination\_collections\_max\_long) | The maximum longitude of the bounding box area | `number` | n/a | yes |

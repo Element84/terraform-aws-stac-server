@@ -1,12 +1,12 @@
 resource "aws_lambda_function" "stac_server_api_auth_pre_hook" {
   count = var.stac_server_auth_pre_hook_enabled ? 1 : 0
 
-  filename         = local.resolved_pre_hook_lambda_zip_filepath
+  filename         = local.stac_server_dist_zip_filepath
   function_name    = "${local.name_prefix}-stac-server-pre-hook"
   description      = "stac-server Auth Pre-Hook Lambda"
   role             = aws_iam_role.stac_api_lambda_role.arn
   handler          = var.pre_hook_lambda.handler
-  source_code_hash = filebase64sha256(local.resolved_pre_hook_lambda_zip_filepath)
+  source_code_hash = local.stac_server_dist_zip_hash
   runtime          = var.pre_hook_lambda.runtime
   timeout          = var.pre_hook_lambda.timeout_seconds
   memory_size      = var.pre_hook_lambda.memory_mb
@@ -28,6 +28,10 @@ resource "aws_lambda_function" "stac_server_api_auth_pre_hook" {
       security_group_ids = var.vpc_security_group_ids
     }
   }
+
+  depends_on = [
+    null_resource.get_stac_server_lambda_dist
+  ]
 }
 
 resource "aws_secretsmanager_secret" "stac_server_api_auth_keys" {

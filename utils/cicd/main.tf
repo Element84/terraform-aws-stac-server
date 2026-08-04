@@ -12,15 +12,15 @@ module "main" {
   source = "../.."
 
   # project
-  project_name                             = "cicd"
-  stac_id                                  = "stac-server"
-  stac_title                               = "STAC API"
-  stac_description                         = "A STAC API using stac-server"
-  stac_server_version                      = null
+  project_name        = "cicd"
+  stac_id             = "stac-server"
+  stac_title          = "STAC API"
+  stac_description    = "A STAC API using stac-server"
+  stac_server_version = "v5.0.2"
+  # stac_server_lambda_zip_filepath
   stac_api_stage                           = "gh"
   stac_api_rootpath                        = "gh"
   stac_api_provisioned_concurrency         = 2
-  deploy_local_stac_server_artifacts       = false
   deploy_stac_server_opensearch_serverless = true
   deploy_stac_server_outside_vpc           = false
 

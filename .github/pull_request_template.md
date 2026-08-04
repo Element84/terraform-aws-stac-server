@@ -26,5 +26,5 @@ This change was validated by the following observations:
 **If a new input variable was added**
 - [ ] I have added a new variable in inputs.tf with a description, added the variable to defaults.tfvars, and to ./utils/cicd/main.tf
 
-**If the built-in stac-server version was updated**
-- [ ] I have updated the `stac_server_version` default value in inputs.tf, noted a version bump in CHANGELOG.md, and updated the `STAC_SERVER_TAG` throughout ./.github/workflows
+**If the default stac-server version was updated**
+- [ ] I have updated the `stac_server_version` value in default.tfvars and ./utils/cicd/main.tf, and noted the version bump in CHANGELOG.md

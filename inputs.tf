@@ -26,15 +26,27 @@ variable "stac_description" {
 
 variable "stac_server_version" {
   description = <<-DESCRIPTION
-  stac-server version. Leave this null to use the default, prepackaged version of stac-server.
-
-  If you need to use a custom version, set this variable to the desired version string *and* set
-  deploy_local_stac_server_artifacts = true. Note though that custom versions of stac-server are not
-  guaranteed to be compatible with this module.
+  (Optional) stac-server version to deploy, as a release tag of the form "vX.Y.Z". The default is the version this module release is tested against. The lambda dist ZIP for this version is downloaded from the [stac-server release](https://github.com/stac-utils/stac-server/releases) of the same tag, unless stac_server_lambda_zip_filepath is set. Releases prior to v5.0.0 do not include a lambda dist ZIP asset and require stac_server_lambda_zip_filepath. Not all stac-server versions are compatible with this module; versions other than the default have not been tested.
   DESCRIPTION
 
-  type    = string
-  default = "v4.5.0"
+  type     = string
+  nullable = false
+  default  = "v5.0.2"
+
+  validation {
+    condition     = can(regex("^v\\d+\\.\\d+\\.\\d+", var.stac_server_version))
+    error_message = "stac_server_version must be a tag of the form vX.Y.Z, e.g. v5.0.0."
+  }
+}
+
+variable "stac_server_lambda_zip_filepath" {
+  description = <<-DESCRIPTION
+  (Optional) Filepath to a stac-server lambda dist ZIP, relative to the root module of this deployment. If set, this ZIP is used instead of downloading the release asset for stac_server_version. Use this for local stac-server builds (`npm run build-lambda-dist`) or for stac-server versions without a lambda dist ZIP release asset. The ZIP must contain all stac-server lambda entrypoints (api/index.js, ingest/index.js, pre-hook/index.js).
+  DESCRIPTION
+
+  type     = string
+  nullable = true
+  default  = null
 }
 
 variable "stac_api_stage" {
@@ -51,21 +63,10 @@ variable "stac_api_provisioned_concurrency" {
 
 variable "stac_api_rootpath" {
   description = <<-DESCRIPTION
-  If stac-server has a cloudfront distribution, this should be an empty string.
-  If stac-server does not have a cloudfront distribution, the api_rest_type is
-  PRIVATE, and you're managing a custom API Gateway domain outside of this module,
-  this should be an empty string.
-  If neither is true, the stac_api_stage var should be used.
+  If stac-server has a cloudfront distribution, this should be an empty string. If stac-server does not have a cloudfront distribution, the api_rest_type is PRIVATE, and you're managing a custom API Gateway domain outside of this module, this should be an empty string. If neither is true, the stac_api_stage var should be used.
   DESCRIPTION
   type        = string
   default     = ""
-}
-
-variable "deploy_local_stac_server_artifacts" {
-  description = "Deploy STAC Server artifacts for local deploy"
-  type        = bool
-  default     = false
-  nullable    = false
 }
 
 variable "deploy_stac_server_opensearch_serverless" {
@@ -162,12 +163,11 @@ variable "opensearch_version" {
 
 variable "opensearch_cluster_instance_type" {
   description = <<-DESCRIPTION
-  OpenSearch Domain instance type. 
-  Examples: 
+  OpenSearch Domain instance type. Examples:
   - t3.small.search (entry level, development)
   - m6g.large.search (general purpose)
   - or2.medium.search (opensearch optimized)
-  
+
   See AWS documentation for full list of supported instance types per region and engine version.
   DESCRIPTION
   type        = string
@@ -177,7 +177,7 @@ variable "opensearch_cluster_instance_type" {
 variable "opensearch_cluster_instance_count" {
   description = <<-DESCRIPTION
   The number of data nodes to provision in the OpenSearch cluster.
-  
+
   Constraints:
   - If zone_awareness_enabled is false: Allowed values are integer >= 1.
   - If zone_awareness_enabled is true and availability_zone_count is 2: Must be an even number >= 2.
@@ -190,12 +190,12 @@ variable "opensearch_cluster_instance_count" {
 variable "opensearch_cluster_zone_awareness_enabled" {
   description = <<-DESCRIPTION
   Enable Zone Awareness to distribute instances across multiple Availability Zones.
-  
+
   Configuration Rules:
-  - If true: 
+  - If true:
     - You must set opensearch_cluster_instance_count >= 2.
     - You must provided enough subnets in vpc_subnet_ids (at least availability_zone_count).
-  - If false: 
+  - If false:
     - You can set opensearch_cluster_instance_count to 1 or more.
     - All instances will be placed in the first subnet provided in vpc_subnet_ids.
   DESCRIPTION
@@ -210,7 +210,7 @@ variable "opensearch_cluster_zone_awareness_enabled" {
 variable "opensearch_cluster_availability_zone_count" {
   description = <<-DESCRIPTION
   The number of Availability Zones to deploy the OpenSearch cluster across.
-  
+
   Constraints:
   - Valid values are 2 or 3.
   - Only used and enforced when opensearch_cluster_zone_awareness_enabled is true.
@@ -268,11 +268,7 @@ variable "opensearch_ebs_volume_type" {
 
 variable "opensearch_override_main_response_version" {
   description = <<-DESCRIPTION
-  Newer versions of Elasticsearch forcefully set this, even if it's not defined here in which case Terraform will try to
-  revert it on every apply. This value does NOT actually change the setting in OpenSearch cluster. See the GitHub issue
-  linked below. This value is here to appease Terraform only. If Terraform is nagging you with perpetual changes to
-  override main response version, set this var to the value your cluster currently has or alternatively update your
-  cluster settings via AWS API to match the default null value set by this module 
+  Newer versions of Elasticsearch forcefully set this, even if it's not defined here in which case Terraform will try to revert it on every apply. This value does NOT actually change the setting in OpenSearch cluster. See the GitHub issue linked below. This value is here to appease Terraform only. If Terraform is nagging you with perpetual changes to override main response version, set this var to the value your cluster currently has or alternatively update your cluster settings via AWS API to match the default null value set by this module
   https://github.com/hashicorp/terraform-provider-aws/issues/27371
   https://docs.aws.amazon.com/opensearch-service/latest/APIReference/API_UpgradeDomain.html#opensearchservice-UpgradeDomain-request-AdvancedOptions
   DESCRIPTION
@@ -354,10 +350,7 @@ variable "api_method_authorization_type" {
 
 variable "private_api_additional_security_group_ids" {
   description = <<-DESCRIPTION
-  Optional list of security group IDs that'll be applied to the VPC interface
-  endpoints of a PRIVATE-type stac-server API Gateway. These security groups are
-  in addition to the security groups that allow traffic from the private subnet
-  CIDR blocks. Only applicable when `var.api_rest_type == PRIVATE`.
+  Optional list of security group IDs that'll be applied to the VPC interface endpoints of a PRIVATE-type stac-server API Gateway. These security groups are in addition to the security groups that allow traffic from the private subnet CIDR blocks. Only applicable when `var.api_rest_type == PRIVATE`.
   DESCRIPTION
   type        = list(string)
   default     = null
@@ -366,30 +359,23 @@ variable "private_api_additional_security_group_ids" {
 variable "api_lambda" {
   description = <<-DESCRIPTION
   (optional, object) Parameters for the stac-server API Lambda function.
-    - zip_filepath: (optional, string) Filepath to a ZIP that implements the
-      stac-server API Lambda. Path is relative to the root module of this
-      deployment. Overrides the default ZIP included with this module.
     - runtime: (optional, string) Lambda runtime.
     - handler: (optional, string) Lambda handler.
     - memory_mb: (optional, number) Lambda max memory (MB).
     - timeout_seconds (optional, number) Lambda timeout (seconds).
-    - environment_variables: (optional, map(string)) Custom environment variables
-      to add to the Lambda. These will be merged with the default environment
-      variables. Custom variables with the same key will override defaults.
+    - environment_variables: (optional, map(string)) Custom environment variables to add to the Lambda. These will be merged with the default environment variables. Custom variables with the same key will override defaults.
   DESCRIPTION
 
   type = object({
-    zip_filepath          = optional(string)
     runtime               = optional(string, "nodejs22.x")
-    handler               = optional(string, "index.handler")
+    handler               = optional(string, "api/index.handler")
     memory_mb             = optional(number, 1024)
     timeout_seconds       = optional(number, 30)
     environment_variables = optional(map(string), {})
   })
   default = {
-    zip_filepath          = null
     runtime               = "nodejs22.x"
-    handler               = "index.handler"
+    handler               = "api/index.handler"
     memory_mb             = 1024
     timeout_seconds       = 30
     environment_variables = {}
@@ -400,30 +386,23 @@ variable "api_lambda" {
 variable "ingest_lambda" {
   description = <<-DESCRIPTION
   (optional, object) Parameters for the stac-server ingest Lambda function.
-    - zip_filepath: (optional, string) Filepath to a ZIP that implements the
-      stac-server ingest Lambda. Path is relative to the root module of this
-      deployment. Overrides the default ZIP included with this module.
     - runtime: (optional, string) Lambda runtime.
     - handler: (optional, string) Lambda handler.
     - memory_mb: (optional, number) Lambda max memory (MB).
     - timeout_seconds (optional, number) Lambda timeout (seconds).
-    - environment_variables: (optional, map(string)) Custom environment variables
-      to add to the Lambda. These will be merged with the default environment
-      variables. Custom variables with the same key will override defaults.
+    - environment_variables: (optional, map(string)) Custom environment variables to add to the Lambda. These will be merged with the default environment variables. Custom variables with the same key will override defaults.
   DESCRIPTION
 
   type = object({
-    zip_filepath          = optional(string)
     runtime               = optional(string, "nodejs22.x")
-    handler               = optional(string, "index.handler")
+    handler               = optional(string, "ingest/index.handler")
     memory_mb             = optional(number, 512)
     timeout_seconds       = optional(number, 60)
     environment_variables = optional(map(string), {})
   })
   default = {
-    zip_filepath          = null
     runtime               = "nodejs22.x"
-    handler               = "index.handler"
+    handler               = "ingest/index.handler"
     memory_mb             = 512
     timeout_seconds       = 60
     environment_variables = {}
@@ -434,30 +413,23 @@ variable "ingest_lambda" {
 variable "pre_hook_lambda" {
   description = <<-DESCRIPTION
   (optional, object) Parameters for the stac-server pre-hook Lambda function.
-    - zip_filepath: (optional, string) Filepath to a ZIP that implements the
-      stac-server auth pre-hook Lambda. Path is relative to the root module of
-      this deployment. Overrides the default ZIP included with this module.
     - runtime: (optional, string) Lambda runtime.
     - handler: (optional, string) Lambda handler.
     - memory_mb: (optional, number) Lambda max memory (MB).
     - timeout_seconds (optional, number) Lambda timeout (seconds).
-    - environment_variables: (optional, map(string)) Custom environment variables
-      to add to the Lambda. These will be merged with the default environment
-      variables. Custom variables with the same key will override defaults.
+    - environment_variables: (optional, map(string)) Custom environment variables to add to the Lambda. These will be merged with the default environment variables. Custom variables with the same key will override defaults.
   DESCRIPTION
 
   type = object({
-    zip_filepath          = optional(string)
     runtime               = optional(string, "nodejs22.x")
-    handler               = optional(string, "index.handler")
+    handler               = optional(string, "pre-hook/index.handler")
     memory_mb             = optional(number, 128)
     timeout_seconds       = optional(number, 25)
     environment_variables = optional(map(string), {})
   })
   default = {
-    zip_filepath          = null
     runtime               = "nodejs22.x"
-    handler               = "index.handler"
+    handler               = "pre-hook/index.handler"
     memory_mb             = 128
     timeout_seconds       = 25
     environment_variables = {}
@@ -481,18 +453,13 @@ variable "vpce_private_dns_enabled" {
   type        = bool
   default     = false
   description = <<-DESCRIPTION
-  Whether to enable Private DNS on the Interface VPC Endpoint used for the STAC API (execute-api). 
-  Leave false if you rely on VPC endpoint-specific hostnames; set true to resolve the standard API Gateway 
-  hostname to the VPC endpoint from within the VPC.
+  Whether to enable Private DNS on the Interface VPC Endpoint used for the STAC API (execute-api). Leave false if you rely on VPC endpoint-specific hostnames; set true to resolve the standard API Gateway hostname to the VPC endpoint from within the VPC.
   DESCRIPTION
 }
 
 variable "custom_vpce_id" {
   description = <<-DESCRIPTION
-  If you are managing a VPC Endpoint for API Gateways outside of this module, provide the VPC Endpoint ID here. 
-  This will prevent the module from creating a VPC Endpoint, and will use the provided one instead for
-  configuring access to the private STAC Server API Gateway. If you have multiple API Gateways which need to
-  communicate with VPC resources, they can share a central VPC Endpoint rather than creating one per API Gateway.
+  If you are managing a VPC Endpoint for API Gateways outside of this module, provide the VPC Endpoint ID here. This will prevent the module from creating a VPC Endpoint, and will use the provided one instead for configuring access to the private STAC Server API Gateway. If you have multiple API Gateways which need to communicate with VPC resources, they can share a central VPC Endpoint rather than creating one per API Gateway.
 
   Should be used in conjunction with api_rest_type = "PRIVATE"
   DESCRIPTION
@@ -635,18 +602,15 @@ variable "asset_proxy_url_expiry" {
 
 variable "opensearch_logs" {
   description = <<-EOT
-    Configuration for OpenSearch log publishing to CloudWatch.
-    This entire variable is optional. If not provided, no logs will be published.
-    
-    NOTE: This variable only applies to the managed (provisioned) OpenSearch service. 
-    It is NOT supported when `deploy_stac_server_opensearch_serverless` is set to `true`.
+    Configuration for OpenSearch log publishing to CloudWatch. This entire variable is optional. If not provided, no logs will be published.
+
+    NOTE: This variable only applies to the managed (provisioned) OpenSearch service. It is NOT supported when `deploy_stac_server_opensearch_serverless` is set to `true`.
 
     You can configure any combination of the following log types (all are optional):
     - `ES_APPLICATION_LOGS`: OpenSearch application logs (error, warn, info).
     - `INDEX_SLOW_LOGS`: Logs for slow indexing operations.
     - `SEARCH_SLOW_LOGS`: Logs for slow search queries.
-    - `AUDIT_LOGS`: Logs for access and security audits. Tracks user activity and access to the domain.
-      Warning: Audit logs can be extremely verbose and may result in significant CloudWatch Log ingestion and storage costs.
+    - `AUDIT_LOGS`: Logs for access and security audits. Tracks user activity and access to the domain. Warning: Audit logs can be extremely verbose and may result in significant CloudWatch Log ingestion and storage costs.
   EOT
   type = object({
     ES_APPLICATION_LOGS = optional(object({

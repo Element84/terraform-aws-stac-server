@@ -1,12 +1,14 @@
 resource "aws_lambda_function" "historical_ingest" {
-  filename      = "${path.module}/lambda.zip"
-  function_name = "${var.stac_server_name_prefix}-historical-ingest"
-  description   = "Historical Ingest Lambda"
-  role          = var.stac_server_lambda_iam_role_arn
-  handler       = "main.lambda_handler"
-  runtime       = "python3.10"
-  timeout       = 900
-  memory_size   = 1536
+  filename = "${path.module}/lambda.zip"
+  # Without this, a rebuilt lambda.zip is not detected and the deployed code goes stale.
+  source_code_hash = filebase64sha256("${path.module}/lambda.zip")
+  function_name    = "${var.stac_server_name_prefix}-historical-ingest"
+  description      = "Historical Ingest Lambda"
+  role             = var.stac_server_lambda_iam_role_arn
+  handler          = "main.lambda_handler"
+  runtime          = "python3.10"
+  timeout          = 900
+  memory_size      = 1536
 
   environment {
     variables = {

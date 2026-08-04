@@ -7,13 +7,47 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### ⚠️ Breaking
+
+**stac-server lambda ZIPs are now downloaded at apply time instead of committed to this module**
+
+- Apply now requires `curl` and `jq` on the machine running Terraform, and network access to GitHub to fetch the [stac-server release](https://github.com/stac-utils/stac-server/releases) asset. Air-gapped or locked-down runners that planned successfully before will fail until the ZIP is provided another way.
+- For local builds or stac-server versions without a release asset (prior to v5.0.0), set `stac_server_lambda_zip_filepath` to a local lambda dist ZIP to bypass the download.
+- On the first apply after upgrading, the api, ingest, and pre-hook lambdas update in place (new ZIP filename, source hash, and handler). This is expected and non-destructive.
+
+**`stac_server_version` is now a required input**
+
+- Set `stac_server_version` to a release tag of the form `vX.Y.Z` (e.g. `v5.0.2`). Deployments that previously relied on a bundled version must now select one explicitly.
+
+**Removed input variables**
+
+- `deploy_local_stac_server_artifacts` and the `zip_filepath` field on `api_lambda` / `ingest_lambda` / `pre_hook_lambda` are gone. Remove any references; use `stac_server_lambda_zip_filepath` for a local ZIP instead.
+
 ### Added
+
+
+- `stac_server_lambda_zip_filepath` variable for pointing at a local stac-server lambda dist ZIP instead of downloading a release asset
+- `utils/fetch-lambda-dist.bash`, which downloads the lambda dist ZIP from a stac-server GitHub release (requires `curl` and `jq` at apply time)
+- `utils/build-historical-ingest.bash`, which builds the historical-ingest module's `lambda.zip` (previously part of `utils/update-lambdas.bash`)
 
 ### Changed
 
+- stac-server lambda ZIPs are no longer built and committed to this repository. The single lambda dist ZIP attached to [stac-server releases](https://github.com/stac-utils/stac-server/releases) (v5.0.0 and later) is downloaded at apply time and used by the api, ingest, and pre-hook lambdas. For older or custom stac-server versions, provide a ZIP via `stac_server_lambda_zip_filepath`. Existing deployments will see an in-place code and configuration update of these lambdas on the first apply after upgrading (new ZIP filename, source hash, and handler)
+- `stac_server_version` is now required and selects the release to download
+- Default `stac_server_version` is now `v5.0.2`
+- Default lambda handlers changed to the dist ZIP entrypoints: `api/index.handler`, `ingest/index.handler`, and `pre-hook/index.handler`
+
 ### Fixed
 
+- `utils/build-historical-ingest.bash` cross-builds the historical-ingest `lambda.zip` for the Lambda platform, so an archive built on macOS no longer ships host binaries that fail at import in Lambda, and rejects an archive whose compiled extensions are not linux/x86_64
+- The historical-ingest lambda sets `source_code_hash`, so a rebuilt `lambda.zip` updates the deployed function instead of leaving stale code in place
+- `utils/fetch-lambda-dist.bash` reports why fetching a lambda dist ZIP failed, distinguishing a missing release from a rate limit, instead of exiting with a bare curl status
+
 ### Removed
+
+- `deploy_local_stac_server_artifacts` variable and the apply-time lambda build it triggered
+- `zip_filepath` field from the `api_lambda`, `ingest_lambda`, and `pre_hook_lambda` variables; use `stac_server_lambda_zip_filepath` instead
+- Committed lambda ZIPs (`lambda/api`, `lambda/ingest`, `lambda/pre-hook`) and `utils/update-lambdas.bash`
 
 ## [2.0.3] - 2026-01-27
 

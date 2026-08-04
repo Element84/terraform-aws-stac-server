@@ -2,11 +2,21 @@
 
 This module creates new collections in a new/destination STAC catalog, then queries for data and siphons it from a source STAC catalog, queueing it for ingest into the destination STAC catalog (by way of the SQS ingest queue).
 
+## Building the Lambda ZIP
+
+Unlike the other Lambdas in this repository, this module's deployment package is not assembled by Terraform. `lambda.tf` reads `lambda.zip` as a file that must already exist, so the archive is committed and rebuilt by hand after any change to `lambda/`:
+
+```bash
+./utils/build-historical-ingest.bash
+```
+
+The script cross-builds for the Lambda's platform regardless of the build host, so it can be run on macOS directly, and it rejects the archive if any compiled dependency came out wrong.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.6.6 |
 | <a name="requirement_archive"></a> [archive](#requirement\_archive) | ~> 2.4 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 6.0 |
@@ -20,7 +30,7 @@ No modules.
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_date_end"></a> [date\_end](#input\_date\_end) | The end date for the historical ingest | `string` | n/a | yes |
 | <a name="input_date_start"></a> [date\_start](#input\_date\_start) | The start date for the historical ingest | `string` | n/a | yes |
 | <a name="input_destination_catalog_url"></a> [destination\_catalog\_url](#input\_destination\_catalog\_url) | The URL of the destination STAC catalog API | `string` | n/a | yes |
