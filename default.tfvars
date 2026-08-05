@@ -13,6 +13,9 @@ deploy_stac_server_outside_vpc           = false
 # use a local lambda dist ZIP instead of downloading the release asset
 # stac_server_lambda_zip_filepath = "artifacts/stac-server-lambda-dist.zip"
 
+# name resources with this suffix instead of stac_api_stage
+# resource_name_suffix = "dev"
+
 # NOTE: edit these VPC values with your AWS environment, the values below are placeholders
 # vpc
 vpc_id                 = "vpc-123456789"

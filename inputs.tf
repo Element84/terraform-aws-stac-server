@@ -55,6 +55,16 @@ variable "stac_api_stage" {
   default     = "dev"
 }
 
+variable "resource_name_suffix" {
+  description = <<-DESCRIPTION
+  (Optional) Suffix used with `fd-<project_name>-` to name all resources. Defaults to `stac_api_stage`. Set this to name resources independently of the API stage — e.g. serve the API at stage `v2` while resources stay named for the `dev` environment.
+  DESCRIPTION
+
+  type     = string
+  nullable = true
+  default  = null
+}
+
 variable "stac_api_provisioned_concurrency" {
   description = "Number of lambda instances to concurrently provision if desired for faster api response time and no cold start delay"
   type        = number
