@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [3.0.0] - 2026-08-05
 
 ### ⚠️ Breaking
 
@@ -14,10 +14,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Apply now requires `curl` and `jq` on the machine running Terraform, and network access to GitHub to fetch the [stac-server release](https://github.com/stac-utils/stac-server/releases) asset. Air-gapped or locked-down runners that planned successfully before will fail until the ZIP is provided another way.
 - For local builds or stac-server versions without a release asset (prior to v5.0.0), set `stac_server_lambda_zip_filepath` to a local lambda dist ZIP to bypass the download.
 - On the first apply after upgrading, the api, ingest, and pre-hook lambdas update in place (new ZIP filename, source hash, and handler). This is expected and non-destructive.
-
-**`stac_server_version` is now a required input**
-
-- Set `stac_server_version` to a release tag of the form `vX.Y.Z` (e.g. `v5.0.2`). Deployments that previously relied on a bundled version must now select one explicitly.
 
 **Removed input variables**
 
@@ -33,8 +29,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - stac-server lambda ZIPs are no longer built and committed to this repository. The single lambda dist ZIP attached to [stac-server releases](https://github.com/stac-utils/stac-server/releases) (v5.0.0 and later) is downloaded at apply time and used by the api, ingest, and pre-hook lambdas. For older or custom stac-server versions, provide a ZIP via `stac_server_lambda_zip_filepath`. Existing deployments will see an in-place code and configuration update of these lambdas on the first apply after upgrading (new ZIP filename, source hash, and handler)
-- `stac_server_version` is now required and selects the release to download
-- Default `stac_server_version` is now `v5.0.2`
+- `stac_server_version` selects the release to download and must be a tag of the form `vX.Y.Z`; it defaults to `v5.0.2`
 - Default lambda handlers changed to the dist ZIP entrypoints: `api/index.handler`, `ingest/index.handler`, and `pre-hook/index.handler`
 
 ### Fixed
@@ -150,3 +145,13 @@ parameter, enabling support for STAC Server v4.4.0+ features like `ENABLE_CONTEX
 - v3.10.0 of stac-server
 
 - Initial version of this standalone stac-server infrastructure module
+
+[3.0.0]: https://github.com/Element84/terraform-aws-stac-server/compare/v2.0.3...v3.0.0
+[2.0.3]: https://github.com/Element84/terraform-aws-stac-server/compare/v2.0.2...v2.0.3
+[2.0.2]: https://github.com/Element84/terraform-aws-stac-server/compare/v2.0.1...v2.0.2
+[2.0.1]: https://github.com/Element84/terraform-aws-stac-server/compare/v2.0.0...v2.0.1
+[2.0.0]: https://github.com/Element84/terraform-aws-stac-server/compare/v1.0.2...v2.0.0
+[1.0.2]: https://github.com/Element84/terraform-aws-stac-server/compare/v1.0.1...v1.0.2
+[1.0.1]: https://github.com/Element84/terraform-aws-stac-server/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/Element84/terraform-aws-stac-server/compare/v0.0.1...v1.0.0
+[0.0.1]: https://github.com/Element84/terraform-aws-stac-server/tree/v0.0.1
