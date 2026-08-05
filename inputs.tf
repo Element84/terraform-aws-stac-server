@@ -57,7 +57,7 @@ variable "stac_api_stage" {
 
 variable "resource_name_suffix" {
   description = <<-DESCRIPTION
-  (Optional) Suffix used with `fd-<project_name>-` to name all resources. Defaults to `stac_api_stage`. Set it so resource names — e.g. the OpenSearch domain, which is destroyed and recreated on rename — do not change when the API stage does.
+  (Optional) Suffix used with `fd-<project_name>-` to name all resources. Defaults to `stac_api_stage`. Set this to name resources independently of the API stage — e.g. serve the API at stage `v2` while resources stay named for the `dev` environment.
   DESCRIPTION
 
   type     = string

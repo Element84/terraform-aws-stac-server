@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- `resource_name_suffix` variable for naming resources with a value other than `stac_api_stage`, so the API stage can change without renaming (and, for stateful resources like the OpenSearch domain, destroying and recreating) every resource
+- `resource_name_suffix` variable for naming resources independently of `stac_api_stage`, so a deployment can serve its API at one path (e.g. `v2`) while its resources are named for something stable (e.g. the environment). Previously the stage set both, so the two could never differ — and any attempt to change it renamed every resource, destroying and recreating stateful ones like the OpenSearch domain.
 - `stac_server_lambda_zip_filepath` variable for pointing at a local stac-server lambda dist ZIP instead of downloading a release asset
 - `utils/fetch-lambda-dist.bash`, which downloads the lambda dist ZIP from a stac-server GitHub release (requires `curl` and `jq` at apply time)
 - `utils/build-historical-ingest.bash`, which builds the historical-ingest module's `lambda.zip` (previously part of `utils/update-lambdas.bash`)
